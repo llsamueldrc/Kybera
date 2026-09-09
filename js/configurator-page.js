@@ -147,24 +147,24 @@ crystalGroup.add(crystalLight);
 
 /* ── Sleeve / Body ── */
 const sleeveHilt = HILT_SLEEVES[currentSleeve];
-const sleeveMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.93, 0.675, 3.9, 32), new THREE.MeshStandardMaterial({ color: sleeveHilt.color, metalness: sleeveHilt.metalness, roughness: sleeveHilt.roughness }));
+const sleeveMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.93, 0.675, 5.1, 32), new THREE.MeshStandardMaterial({ color: sleeveHilt.color, metalness: sleeveHilt.metalness, roughness: sleeveHilt.roughness }));
 sleeveMesh.rotation.z = Math.PI / 2;
 sleeveGroup.add(sleeveMesh);
 
 const srTop = new THREE.Mesh(new THREE.TorusGeometry(0.96, 0.0525, 8, 32), metalMat.clone());
 srTop.rotation.y = Math.PI / 2;
-srTop.position.x = 1.755;
+srTop.position.x = 2.295;
 sleeveGroup.add(srTop);
 
 const srBot = new THREE.Mesh(new THREE.TorusGeometry(0.705, 0.0525, 8, 32), metalMat.clone());
 srBot.rotation.y = Math.PI / 2;
-srBot.position.x = -1.755;
+srBot.position.x = -2.295;
 sleeveGroup.add(srBot);
 
 for (let i = 0; i < 8; i++) {
   const g = new THREE.Mesh(new THREE.TorusGeometry(0.87 - (i / 8) * 0.18, 0.018, 6, 32), new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.6, roughness: 0.5 }));
   g.rotation.y = Math.PI / 2;
-  g.position.x = -1.56 + i * 0.429;
+  g.position.x = -2.04 + i * 0.561;
   sleeveGroup.add(g);
 }
 
@@ -173,10 +173,10 @@ const sleeveMeshes = [sleeveMesh];
 /* ── Grip + Pommel ── */
 const conn = new THREE.Mesh(new THREE.CylinderGeometry(0.525, 0.72, 0.375, 32), metalMat.clone());
 conn.rotation.z = Math.PI / 2;
-conn.position.x = 1.365;
+conn.position.x = 1.53;
 gripGroup.add(conn);
 
-const gripBase = new THREE.Mesh(new THREE.CylinderGeometry(0.72, 0.78, 2.34, 32), metalMat.clone());
+const gripBase = new THREE.Mesh(new THREE.CylinderGeometry(0.72, 0.78, 3.06, 32), metalMat.clone());
 gripBase.material.color.set(0x666666);
 gripBase.rotation.z = Math.PI / 2;
 gripGroup.add(gripBase);
@@ -184,18 +184,18 @@ gripGroup.add(gripBase);
 for (let i = 0; i < 5; i++) {
   const r = new THREE.Mesh(new THREE.TorusGeometry(0.78, 0.045, 8, 32), metalMat.clone());
   r.rotation.y = Math.PI / 2;
-  r.position.x = -0.975 + i * 0.351;
+  r.position.x = -1.53 + i * 0.765;
   gripGroup.add(r);
 }
 
 const pommel = new THREE.Mesh(new THREE.CylinderGeometry(0.825, 0.975, 0.525, 32), metalMat.clone());
 pommel.rotation.z = Math.PI / 2;
-pommel.position.x = -1.755;
+pommel.position.x = -1.53;
 gripGroup.add(pommel);
 
 const pommelRing = new THREE.Mesh(new THREE.TorusGeometry(0.9, 0.06, 8, 32), metalMat.clone());
 pommelRing.rotation.y = Math.PI / 2;
-pommelRing.position.x = -1.4625;
+pommelRing.position.x = -1.53;
 gripGroup.add(pommelRing);
 
 /* ── Blade (hidden, extends left from emitter) ── */
