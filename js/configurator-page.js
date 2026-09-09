@@ -108,10 +108,6 @@ emTop.rotation.z = Math.PI / 2;
 emTop.position.x = 0.42;
 emitterGroup.add(emTop);
 
-const emRing = new THREE.Mesh(new THREE.TorusGeometry(0.48, 0.045, 8, 32), new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 0.8, metalness: 0.9, roughness: 0.2 }));
-emRing.rotation.y = Math.PI / 2;
-emRing.position.x = 0.63;
-emitterGroup.add(emRing);
 
 /* ── Crystal Housing + Crystal ── */
 const housingMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.72, 0.93, 0.6, 32), metalMat.clone());
@@ -181,7 +177,7 @@ gripBase.material.color.set(0x666666);
 gripBase.rotation.z = Math.PI / 2;
 gripGroup.add(gripBase);
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 4; i++) {
   const r = new THREE.Mesh(new THREE.TorusGeometry(0.78, 0.045, 8, 32), metalMat.clone());
   r.rotation.y = Math.PI / 2;
   r.position.x = -1.53 + i * 0.765;
@@ -239,7 +235,7 @@ const EXPLODED = {
 };
 const ASSEMBLED = {
   emitter:  new THREE.Vector3(0, 0, 0),
-  crystal:  new THREE.Vector3(0, 0, 0),
+  crystal:  new THREE.Vector3(0.5, 0, 0),
   sleeve:   new THREE.Vector3(0, 0, 0),
   grip:     new THREE.Vector3(0, 0, 0)
 };
