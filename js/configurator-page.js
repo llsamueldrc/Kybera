@@ -7,12 +7,12 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 const CRYSTAL_COLORS = {
-  blue:   { hex: '#0088ff' },
+  blue:   { hex: '#00ccff' },
   green:  { hex: '#00ff66' },
-  purple: { hex: '#aa00ff' },
+  purple: { hex: '#cc44ff' },
   white:  { hex: '#ffffff' },
-  red:    { hex: '#ff2200' },
-  black:  { hex: '#222222' },
+  red:    { hex: '#ff3322' },
+  black:  { hex: '#555555' },
   yellow: { hex: '#ffcc00' }
 };
 const HILT_SLEEVES = {
@@ -119,13 +119,13 @@ const housingMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.72, 0.93, 0.6, 3
 housingMesh.rotation.z = Math.PI / 2;
 crystalGroup.add(housingMesh);
 
-const winMat = new THREE.MeshStandardMaterial({ color: 0x112233, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.3, side: THREE.DoubleSide });
+const winMat = new THREE.MeshStandardMaterial({ color: 0x112233, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.15, side: THREE.DoubleSide });
 const windowMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 0.375, 32, 1, true), winMat);
 windowMesh.rotation.z = Math.PI / 2;
 crystalGroup.add(windowMesh);
 
 const crystalColor = CRYSTAL_COLORS[currentCrystal];
-const crystalMesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.3, 0), new THREE.MeshStandardMaterial({ color: new THREE.Color(crystalColor.hex), emissive: new THREE.Color(crystalColor.hex), emissiveIntensity: 2.5, metalness: 0.1, roughness: 0.1, transparent: true, opacity: 0.9 }));
+const crystalMesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.5, 0), new THREE.MeshStandardMaterial({ color: new THREE.Color(crystalColor.hex), emissive: new THREE.Color(crystalColor.hex), emissiveIntensity: 1.2, metalness: 0.1, roughness: 0.1, transparent: true, opacity: 0.9 }));
 crystalMesh.scale.set(1, 1.3, 1);
 crystalGroup.add(crystalMesh);
 
@@ -216,10 +216,10 @@ scene.add(saberGroup);
 
 /* ── Exploded positions (along X axis) ── */
 const EXPLODED = {
-  emitter:  new THREE.Vector3(-2.8, 0.15, 0),
-  crystal:  new THREE.Vector3(-0.9, 0.30, 0),
-  sleeve:   new THREE.Vector3(0.9, 0, 0),
-  grip:     new THREE.Vector3(2.8, -0.10, 0)
+  emitter:  new THREE.Vector3(-3.5, 0, 0),
+  crystal:  new THREE.Vector3(-1.2, 0, 0),
+  sleeve:   new THREE.Vector3(1.5, 0, 0),
+  grip:     new THREE.Vector3(3.8, 0, 0)
 };
 const ASSEMBLED = {
   emitter:  new THREE.Vector3(0, 0, 0),
