@@ -43,7 +43,7 @@ new THREE.TextureLoader().load('/wallpapers/capa 1,2,3.jpeg', (tex) => {
   scene.background = tex;
 });
 
-const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 200);
+const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 1000);
 camera.position.set(3, 2.5, 6);
 
 const controls = new OrbitControls(camera, renderer.domElement);
