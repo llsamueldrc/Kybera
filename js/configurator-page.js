@@ -12,7 +12,7 @@ const CRYSTAL_COLORS = {
   purple: { hex: '#ee66ff' },
   white:  { hex: '#ffffff' },
   red:    { hex: '#ff4444' },
-  black:  { hex: '#1a1a1a' },
+  black:  { hex: '#333333' },
   yellow: { hex: '#ffcc00' }
 };
 const HILT_SLEEVES = {
@@ -75,8 +75,8 @@ frontFill.position.set(0, 3, 8);
 scene.add(frontFill);
 
 const crystalLight = new THREE.PointLight(new THREE.Color(CRYSTAL_COLORS.blue.hex), 1.5, 10, 2);
-crystalLight.position.set(0, 1.5, 0);
-scene.add(crystalLight);
+crystalLight.position.set(0, 0, 0);
+crystalGroup.add(crystalLight);
 const emitterLight = new THREE.PointLight(0x00ffff, 0.3, 6, 2);
 emitterLight.position.set(-3.5, 1.5, 0);
 scene.add(emitterLight);
@@ -341,7 +341,7 @@ document.getElementById('btn-power').addEventListener('click', () => {
     bladeActive = false;
     bladeTarget = 0;
     bloomPass.strength = 0.8;
-    crystalLight.intensity = 2.0;
+    crystalLight.intensity = 2.5;
     emitterLight.intensity = 0.3;
     energyRing1.material.opacity = 0;
     energyRing2.material.opacity = 0;
@@ -390,6 +390,16 @@ function animate() {
 
   crystalMesh.material.emissiveIntensity = 1.0 + Math.sin(t * 3) * 0.2;
   crystalMesh.rotation.y = t * 0.5;
+
+  /* Crystal light lightning effect for black */
+  if (currentCrystal === 'black') {
+    crystalLight.intensity = 3.0 + Math.sin(t * 15) * 2.0 + Math.random() * 1.5;
+  } else if (!isAssembled) {
+    crystalLight.intensity = 2.5;
+  } else {
+    crystalLight.intensity = 4.0;
+  }
+
 
   /* Lightning effect for black crystal */
   if (currentCrystal === 'black') {
