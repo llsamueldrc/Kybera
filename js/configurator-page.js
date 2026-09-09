@@ -229,6 +229,7 @@ saberGroup.add(sleeveGroup);
 saberGroup.add(gripGroup);
 saberGroup.position.y = 1.5;
 scene.add(saberGroup);
+saberGroup.scale.set(1.15, 1.15, 1.15);
 
 /* ── Exploded positions (along X axis) ── */
 const EXPLODED = {
