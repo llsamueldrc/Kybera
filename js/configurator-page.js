@@ -12,7 +12,10 @@ const CRYSTAL_COLORS = {
   blue:   { hex: '#0088ff' },
   green:  { hex: '#00ff66' },
   purple: { hex: '#aa00ff' },
-  white:  { hex: '#ffffff' }
+  white:  { hex: '#ffffff' },
+  red:    { hex: '#ff2200' },
+  black:  { hex: '#222222' },
+  yellow: { hex: '#ffcc00' }
 };
 const HILT_SLEEVES = {
   brushedSteel: { name: 'Brushed Steel', metalness: 0.9, roughness: 0.2, color: 0xaaaaaa },
