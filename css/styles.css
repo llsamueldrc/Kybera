@@ -9,7 +9,7 @@
   --blue: #0088ff;
   --green: #00ff66;
   --dark-bg: #0a0e17;
-  --panel-bg: rgba(0, 0, 0, 0.82);
+  --panel-bg: rgba(0, 8, 18, 0.35);
   --border-glow: rgba(0, 255, 255, 0.25);
 }
 
@@ -67,23 +67,23 @@ html, body {
 /* ── Cyber Panel ───────────────────────────────────────────── */
 .cyber-panel {
   background: var(--panel-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   border: 1px solid var(--border-glow);
   box-shadow:
     0 0 20px rgba(0, 255, 255, 0.06),
-    inset 0 0 30px rgba(0, 0, 0, 0.4);
+    inset 0 0 20px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
 }
 
 .cyber-panel-purple {
   background: var(--panel-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   border: 1px solid rgba(170, 0, 255, 0.25);
   box-shadow:
     0 0 20px rgba(170, 0, 255, 0.06),
-    inset 0 0 30px rgba(0, 0, 0, 0.4);
+    inset 0 0 20px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
 }
 
@@ -181,16 +181,28 @@ html, body {
   width: 72px;
   height: 72px;
   border-radius: 6px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
 
-.material-thumb:hover {
-  border-color: rgba(0, 255, 255, 0.5);
-  box-shadow: 0 0 12px rgba(0, 255, 255, 0.15);
+.material-thumb::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.04) 1px, rgba(255,255,255,0.04) 2px);
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.material-thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.15) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(0,0,0,0.25) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .material-thumb.selected {
@@ -211,22 +223,24 @@ html, body {
 .crystal-thumb {
   width: 72px;
   height: 72px;
-  border-radius: 6px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 0;
+  background: transparent;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
 }
 
 .crystal-thumb:hover {
-  transform: scale(1.08);
+  transform: scale(1.12);
+  filter: drop-shadow(0 4px 16px rgba(0, 255, 255, 0.3));
 }
 
 .crystal-thumb.selected {
-  border-color: var(--cyan);
-  box-shadow: 0 0 18px rgba(0, 255, 255, 0.35);
+  filter: drop-shadow(0 0 12px rgba(0, 255, 255, 0.5)) drop-shadow(0 0 24px rgba(0, 255, 255, 0.2));
 }
 
 /* ── Form Inputs ───────────────────────────────────────────── */
