@@ -38,7 +38,10 @@ renderer.setClearColor(0x000000, 0);
 container.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x070b14, 0.008);
+new THREE.TextureLoader().load('/wallpapers/capa 1,2,3.jpeg', (tex) => {
+  tex.colorSpace = THREE.SRGBColorSpace;
+  scene.background = tex;
+});
 
 const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 200);
 camera.position.set(4, 3, 8);
@@ -81,30 +84,6 @@ const rimLight = new THREE.PointLight(0xaa00ff, 0.2, 12, 2);
 rimLight.position.set(0, -1, 2);
 scene.add(rimLight);
 
-const floor = new THREE.Mesh(
-  new THREE.CircleGeometry(20, 64),
-  new THREE.MeshStandardMaterial({ color: 0x111a24, metalness: 0.7, roughness: 0.4 })
-);
-floor.rotation.x = -Math.PI / 2;
-floor.position.y = -0.05;
-scene.add(floor);
-
-const ringMat = new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 0.5, metalness: 0.9, roughness: 0.2 });
-const ring = new THREE.Mesh(new THREE.TorusGeometry(1.8, 0.08, 16, 64), ringMat);
-ring.rotation.x = -Math.PI / 2;
-ring.position.y = 0.01;
-scene.add(ring);
-const outerRing = new THREE.Mesh(new THREE.TorusGeometry(2.5, 0.04, 16, 64), ringMat.clone());
-outerRing.material.emissiveIntensity = 0.2;
-outerRing.rotation.x = -Math.PI / 2;
-outerRing.position.y = 0.01;
-scene.add(outerRing);
-
-const gridHelper = new THREE.GridHelper(20, 40, 0x0a2a3a, 0x0a1a2a);
-gridHelper.position.y = 0.02;
-gridHelper.material.opacity = 0.3;
-gridHelper.material.transparent = true;
-scene.add(gridHelper);
 
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
