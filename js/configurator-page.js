@@ -44,7 +44,7 @@ new THREE.TextureLoader().load('/wallpapers/capa 1,2,3.jpeg', (tex) => {
 });
 
 const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 200);
-camera.position.set(4, 3, 8);
+camera.position.set(3, 2.5, 6);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -99,109 +99,109 @@ const sleeveGroup = new THREE.Group();
 const gripGroup = new THREE.Group();
 
 /* ── Emitter ── */
-const emBase = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.48, 0.25, 32), metalMat.clone());
+const emBase = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.72, 0.375, 32), metalMat.clone());
 emBase.rotation.z = Math.PI / 2;
 emitterGroup.add(emBase);
 
-const emTop = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.3, 0.3, 32), metalMat.clone());
+const emTop = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.45, 0.45, 32), metalMat.clone());
 emTop.material.color.set(0x777777);
 emTop.rotation.z = Math.PI / 2;
-emTop.position.x = 0.28;
+emTop.position.x = 0.42;
 emitterGroup.add(emTop);
 
-const emRing = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.03, 8, 32), new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 0.8, metalness: 0.9, roughness: 0.2 }));
+const emRing = new THREE.Mesh(new THREE.TorusGeometry(0.48, 0.045, 8, 32), new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 0.8, metalness: 0.9, roughness: 0.2 }));
 emRing.rotation.y = Math.PI / 2;
-emRing.position.x = 0.42;
+emRing.position.x = 0.63;
 emitterGroup.add(emRing);
 
 /* ── Crystal Housing + Crystal ── */
-const housingMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.62, 0.4, 32), metalMat.clone());
+const housingMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.72, 0.93, 0.6, 32), metalMat.clone());
 housingMesh.rotation.z = Math.PI / 2;
 crystalGroup.add(housingMesh);
 
 const winMat = new THREE.MeshStandardMaterial({ color: 0x112233, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.3, side: THREE.DoubleSide });
-const windowMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.25, 32, 1, true), winMat);
+const windowMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 0.375, 32, 1, true), winMat);
 windowMesh.rotation.z = Math.PI / 2;
 crystalGroup.add(windowMesh);
 
 const crystalColor = CRYSTAL_COLORS[currentCrystal];
-const crystalMesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.2, 0), new THREE.MeshStandardMaterial({ color: new THREE.Color(crystalColor.hex), emissive: new THREE.Color(crystalColor.hex), emissiveIntensity: 2.5, metalness: 0.1, roughness: 0.1, transparent: true, opacity: 0.9 }));
+const crystalMesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.3, 0), new THREE.MeshStandardMaterial({ color: new THREE.Color(crystalColor.hex), emissive: new THREE.Color(crystalColor.hex), emissiveIntensity: 2.5, metalness: 0.1, roughness: 0.1, transparent: true, opacity: 0.9 }));
 crystalMesh.scale.set(1, 1.3, 1);
 crystalGroup.add(crystalMesh);
 
 /* ── Sleeve / Body ── */
 const sleeveHilt = HILT_SLEEVES[currentSleeve];
-const sleeveMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.45, 2.0, 32), new THREE.MeshStandardMaterial({ color: sleeveHilt.color, metalness: sleeveHilt.metalness, roughness: sleeveHilt.roughness }));
+const sleeveMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.93, 0.675, 3.0, 32), new THREE.MeshStandardMaterial({ color: sleeveHilt.color, metalness: sleeveHilt.metalness, roughness: sleeveHilt.roughness }));
 sleeveMesh.rotation.z = Math.PI / 2;
 sleeveGroup.add(sleeveMesh);
 
-const srTop = new THREE.Mesh(new THREE.TorusGeometry(0.64, 0.035, 8, 32), metalMat.clone());
+const srTop = new THREE.Mesh(new THREE.TorusGeometry(0.96, 0.0525, 8, 32), metalMat.clone());
 srTop.rotation.y = Math.PI / 2;
-srTop.position.x = 0.9;
+srTop.position.x = 1.35;
 sleeveGroup.add(srTop);
 
-const srBot = new THREE.Mesh(new THREE.TorusGeometry(0.47, 0.035, 8, 32), metalMat.clone());
+const srBot = new THREE.Mesh(new THREE.TorusGeometry(0.705, 0.0525, 8, 32), metalMat.clone());
 srBot.rotation.y = Math.PI / 2;
-srBot.position.x = -0.9;
+srBot.position.x = -1.35;
 sleeveGroup.add(srBot);
 
 for (let i = 0; i < 8; i++) {
-  const g = new THREE.Mesh(new THREE.TorusGeometry(0.58 - (i / 8) * 0.12, 0.012, 6, 32), new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.6, roughness: 0.5 }));
+  const g = new THREE.Mesh(new THREE.TorusGeometry(0.87 - (i / 8) * 0.18, 0.018, 6, 32), new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.6, roughness: 0.5 }));
   g.rotation.y = Math.PI / 2;
-  g.position.x = -0.8 + i * 0.22;
+  g.position.x = -1.2 + i * 0.33;
   sleeveGroup.add(g);
 }
 
 const sleeveMeshes = [sleeveMesh];
 
 /* ── Grip + Pommel ── */
-const conn = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.48, 0.25, 32), metalMat.clone());
+const conn = new THREE.Mesh(new THREE.CylinderGeometry(0.525, 0.72, 0.375, 32), metalMat.clone());
 conn.rotation.z = Math.PI / 2;
-conn.position.x = 0.7;
+conn.position.x = 1.05;
 gripGroup.add(conn);
 
-const gripBase = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.52, 1.2, 32), metalMat.clone());
+const gripBase = new THREE.Mesh(new THREE.CylinderGeometry(0.72, 0.78, 1.8, 32), metalMat.clone());
 gripBase.material.color.set(0x666666);
 gripBase.rotation.z = Math.PI / 2;
 gripGroup.add(gripBase);
 
 for (let i = 0; i < 5; i++) {
-  const r = new THREE.Mesh(new THREE.TorusGeometry(0.52, 0.03, 8, 32), metalMat.clone());
+  const r = new THREE.Mesh(new THREE.TorusGeometry(0.78, 0.045, 8, 32), metalMat.clone());
   r.rotation.y = Math.PI / 2;
-  r.position.x = -0.5 + i * 0.18;
+  r.position.x = -0.75 + i * 0.27;
   gripGroup.add(r);
 }
 
-const pommel = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.65, 0.35, 32), metalMat.clone());
+const pommel = new THREE.Mesh(new THREE.CylinderGeometry(0.825, 0.975, 0.525, 32), metalMat.clone());
 pommel.rotation.z = Math.PI / 2;
-pommel.position.x = -0.9;
+pommel.position.x = -1.35;
 gripGroup.add(pommel);
 
-const pommelRing = new THREE.Mesh(new THREE.TorusGeometry(0.6, 0.04, 8, 32), metalMat.clone());
+const pommelRing = new THREE.Mesh(new THREE.TorusGeometry(0.9, 0.06, 8, 32), metalMat.clone());
 pommelRing.rotation.y = Math.PI / 2;
-pommelRing.position.x = -0.75;
+pommelRing.position.x = -1.125;
 gripGroup.add(pommelRing);
 
 /* ── Blade (hidden, extends left from emitter) ── */
 const bladeColor = new THREE.Color(crystalColor.hex);
-const bladeMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.04, 6.0, 16), new THREE.MeshStandardMaterial({ color: bladeColor, emissive: bladeColor, emissiveIntensity: 3.0, transparent: true, opacity: 0.85, side: THREE.DoubleSide }));
+const bladeMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.06, 9.0, 16), new THREE.MeshStandardMaterial({ color: bladeColor, emissive: bladeColor, emissiveIntensity: 3.0, transparent: true, opacity: 0.85, side: THREE.DoubleSide }));
 bladeMesh.rotation.z = Math.PI / 2;
 bladeMesh.scale.set(1, 0, 1);
-bladeMesh.position.x = -3.5;
+bladeMesh.position.x = -5.25;
 emitterGroup.add(bladeMesh);
 
-const bladeGlow = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.08, 6.0, 16), new THREE.MeshBasicMaterial({ color: bladeColor, transparent: true, opacity: 0.15, side: THREE.DoubleSide }));
+const bladeGlow = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.12, 9.0, 16), new THREE.MeshBasicMaterial({ color: bladeColor, transparent: true, opacity: 0.15, side: THREE.DoubleSide }));
 bladeGlow.rotation.z = Math.PI / 2;
 bladeGlow.scale.set(1, 0, 1);
-bladeGlow.position.x = -3.5;
+bladeGlow.position.x = -5.25;
 emitterGroup.add(bladeGlow);
 
 /* ── Energy rings (hidden) ── */
-const energyRing1 = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.015, 8, 32), new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 2, transparent: true, opacity: 0, side: THREE.DoubleSide }));
+const energyRing1 = new THREE.Mesh(new THREE.TorusGeometry(0.75, 0.0225, 8, 32), new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 2, transparent: true, opacity: 0, side: THREE.DoubleSide }));
 energyRing1.rotation.y = Math.PI / 2;
 emitterGroup.add(energyRing1);
 
-const energyRing2 = new THREE.Mesh(new THREE.TorusGeometry(0.7, 0.01, 8, 32), new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 1.5, transparent: true, opacity: 0, side: THREE.DoubleSide }));
+const energyRing2 = new THREE.Mesh(new THREE.TorusGeometry(1.05, 0.015, 8, 32), new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 1.5, transparent: true, opacity: 0, side: THREE.DoubleSide }));
 energyRing2.rotation.y = Math.PI / 2;
 emitterGroup.add(energyRing2);
 
@@ -216,10 +216,10 @@ scene.add(saberGroup);
 
 /* ── Exploded positions (along X axis) ── */
 const EXPLODED = {
-  emitter:  new THREE.Vector3(-3.5, 0, 0),
-  crystal:  new THREE.Vector3(-1.2, 0, 0),
-  sleeve:   new THREE.Vector3(1.2, 0, 0),
-  grip:     new THREE.Vector3(3.5, 0, 0)
+  emitter:  new THREE.Vector3(-2.8, 0.15, 0),
+  crystal:  new THREE.Vector3(-0.9, 0.30, 0),
+  sleeve:   new THREE.Vector3(0.9, 0, 0),
+  grip:     new THREE.Vector3(2.8, -0.10, 0)
 };
 const ASSEMBLED = {
   emitter:  new THREE.Vector3(0, 0, 0),
@@ -324,7 +324,7 @@ document.getElementById('btn-power').addEventListener('click', () => {
     bladeActive = false;
     bladeTarget = 0;
     bloomPass.strength = 0.8;
-    crystalLight.intensity = 1.5;
+    crystalLight.intensity = 2.0;
     emitterLight.intensity = 0.3;
     energyRing1.material.opacity = 0;
     energyRing2.material.opacity = 0;
