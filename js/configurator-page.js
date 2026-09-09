@@ -76,7 +76,6 @@ scene.add(frontFill);
 
 const crystalLight = new THREE.PointLight(new THREE.Color(CRYSTAL_COLORS.blue.hex), 1.5, 10, 2);
 crystalLight.position.set(0, 0, 0);
-crystalGroup.add(crystalLight);
 const emitterLight = new THREE.PointLight(0x00ffff, 0.3, 6, 2);
 emitterLight.position.set(-3.5, 1.5, 0);
 scene.add(emitterLight);
@@ -141,6 +140,8 @@ for (let i = 0; i < 6; i++) {
   ray.rotation.z = Math.PI / 2;
   crystalGroup.add(ray);
   lightningRays.push(ray);
+
+crystalGroup.add(crystalLight);
 }
 
 
