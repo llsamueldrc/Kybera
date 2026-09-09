@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KYBERA — Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            neon: { cyan: '#00ffff', purple: '#aa00ff', blue: '#0088ff', green: '#00ff66' },
+            hangar: { dark: '#0a0e17', mid: '#111827', light: '#1a2332' }
+          },
+          fontFamily: {
+            mono: ['"Share Tech Mono"', 'monospace'],
+            display: ['"Orbitron"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-black text-white overflow-hidden m-0 p-0 font-mono">
+
+  <!-- WALLPAPER: capa 0 (admin curved screen) -->
+  <div class="fixed inset-0 w-screen h-screen z-0"
+       style="background: url('/wallpapers/capa 0.jpeg') center/cover no-repeat;">
+  </div>
+
+  <!-- CONTENT: positioned to fit inside the curved screen area -->
+  <div class="fixed inset-0 z-10 pointer-events-auto overflow-y-auto"
+       style="padding: 5vh 4vw 3vh 4vw;">
+    <div class="flex flex-col lg:flex-row gap-5 max-w-6xl mx-auto h-full animate-fade-in">
+
+      <!-- Dashboard Panel — fits inside the main curved screen -->
+      <div class="admin-screen-panel p-5 flex-1 flex flex-col min-h-0">
+        <div class="panel-label mb-4 text-center" style="font-size:0.55rem;">ADMIN DASHBOARD — CONSOLIDATED ORDER VIEW</div>
+
+        <!-- Stats row -->
+        <div class="flex gap-3 mb-4">
+          <div class="admin-stat-card px-3 py-2 flex-1 min-w-0">
+            <p class="text-[0.5rem] text-gray-500 tracking-wider">ORDERS IN PROCESS</p>
+            <p class="text-neon-cyan font-display text-lg">42</p>
+          </div>
+          <div class="admin-stat-card px-3 py-2 flex-1 min-w-0">
+            <p class="text-[0.5rem] text-gray-500 tracking-wider">PENDING ACTIONS</p>
+            <p class="text-yellow-400 font-display text-lg">5</p>
+          </div>
+          <div class="admin-stat-card px-3 py-2 flex-1 min-w-0">
+            <p class="text-[0.5rem] text-gray-500 tracking-wider">PRODUCTION STAGE</p>
+            <p class="text-green-400 font-display text-lg">0</p>
+          </div>
+        </div>
+
+        <!-- Status tracker chart -->
+        <div class="mb-4">
+          <p class="text-[0.5rem] text-cyan-400/60 tracking-widest mb-2">STATUS TRACKER</p>
+          <div class="flex items-end gap-2 h-16 px-1">
+            <div class="flex flex-col items-center gap-0.5 flex-1 h-full justify-end">
+              <span class="text-[0.45rem] text-gray-500">18</span>
+              <div class="admin-chart-bar w-full" style="height:90%; background:#00ffff;"></div>
+              <span class="text-[0.45rem] text-gray-500">Forging</span>
+            </div>
+            <div class="flex flex-col items-center gap-0.5 flex-1 h-full justify-end">
+              <span class="text-[0.45rem] text-gray-500">12</span>
+              <div class="admin-chart-bar w-full" style="height:60%; background:#00ff66;"></div>
+              <span class="text-[0.45rem] text-gray-500">Tuning</span>
+            </div>
+            <div class="flex flex-col items-center gap-0.5 flex-1 h-full justify-end">
+              <span class="text-[0.45rem] text-gray-500">8</span>
+              <div class="admin-chart-bar w-full" style="height:40%; background:#aa00ff;"></div>
+              <span class="text-[0.45rem] text-gray-500">Test</span>
+            </div>
+            <div class="flex flex-col items-center gap-0.5 flex-1 h-full justify-end">
+              <span class="text-[0.45rem] text-gray-500">4</span>
+              <div class="admin-chart-bar w-full" style="height:20%; background:#888;"></div>
+              <span class="text-[0.45rem] text-gray-500">Ship</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Orders table -->
+        <div class="overflow-x-auto flex-1 min-h-0">
+          <table class="cyber-table">
+            <thead>
+              <tr>
+                <th>GUIDE #</th>
+                <th>CLIENT</th>
+                <th>SABER CONFIG</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="text-cyan-400/70">#KYB-9942-X</td><td>Marlon</td><td class="text-gray-400">Amethyst Hilt / Gold Accent</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option>Forging</option><option>Tuning</option><option>Test</option><option>Ship</option></select></td></tr>
+              <tr><td class="text-cyan-400/70">#KYB-9942-X</td><td>Methyst</td><td class="text-gray-400">Amethyst Hilt / Silver Grip</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option>Forging</option><option>Tuning</option><option>Test</option><option>Ship</option></select></td></tr>
+              <tr><td class="text-cyan-400/70">#KYB-9942-X</td><td>Shanon</td><td class="text-gray-400">Emerald Hilt / Silver Grip</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option selected>Tuning</option><option>Forging</option><option>Test</option><option>Ship</option></select></td></tr>
+              <tr><td class="text-cyan-400/70">#KYB-9942-X</td><td>Porios</td><td class="text-gray-400">Amethyst Hilt / Silver Grip</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option>Forging</option><option>Tuning</option><option>Test</option><option>Ship</option></select></td></tr>
+              <tr><td class="text-cyan-400/70">#KYB-9942-X</td><td>Forging</td><td class="text-gray-400">Emerald Hilt / Gold Accent</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option>Forging</option><option>Tuning</option><option>Test</option><option>Ship</option></select></td></tr>
+              <tr><td class="text-cyan-400/70">#KYB-9943-X</td><td>Junon</td><td class="text-gray-400">Amber Hilt / Gold Accent</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option selected>Tuning</option><option>Forging</option><option>Test</option><option>Ship</option></select></td></tr>
+              <tr><td class="text-cyan-400/70">#KYB-9943-X</td><td>Sharmaa</td><td class="text-gray-400">Amethyst Hilt / Gold Accent</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option selected>Tuning</option><option>Forging</option><option>Test</option><option>Ship</option></select></td></tr>
+              <tr><td class="text-cyan-400/70">#KYB-9942-X</td><td>Cris</td><td class="text-gray-400">Emerald Hilt / Silver Grip</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option selected>Tuning</option><option>Forging</option><option>Test</option><option>Ship</option></select></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Order Tracking Panel — fits inside the right-side display -->
+      <div class="admin-screen-panel p-5 w-full lg:w-64 flex flex-col shrink-0">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-[0.6rem] text-gray-400 tracking-widest">ORDER TRACKING</span>
+        </div>
+        <div class="mb-3">
+          <span class="text-neon-cyan font-display text-base tracking-wider">#KYB-9942-X</span>
+        </div>
+        <div class="progress-track mb-4">
+          <div class="progress-fill" style="width: 28%"></div>
+        </div>
+        <div class="flex flex-col flex-1">
+          <div class="timeline-step done">
+            <div class="timeline-dot"></div>
+            <div class="flex items-center gap-2">
+              <span class="text-[0.6rem] text-green-400">01 Order Received</span>
+              <svg class="w-3.5 h-3.5 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <p class="text-[0.4rem] text-green-500/60 tracking-wider mt-0.5">[DONE]</p>
+          </div>
+          <div class="timeline-step active">
+            <div class="timeline-dot"></div>
+            <div class="flex items-center gap-2">
+              <span class="text-[0.6rem] text-neon-cyan">02 Hilt Forging</span>
+              <svg class="w-2.5 h-2.5 text-neon-cyan animate-spin ml-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20"/></svg>
+            </div>
+            <p class="text-[0.4rem] text-cyan-500/60 tracking-wider mt-0.5">[IN PROGRESS]</p>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-dot"></div>
+            <span class="text-[0.6rem] text-gray-500">03 Kyber Core Tuning</span>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-dot"></div>
+            <span class="text-[0.6rem] text-gray-500">04 Quality Test</span>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-dot"></div>
+            <span class="text-[0.6rem] text-gray-500">05 Starport Shipping</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KYBERA — Configurador</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            neon: { cyan: '#00ffff', purple: '#aa00ff', blue: '#0088ff', green: '#00ff66' },
+            hangar: { dark: '#0a0e17', mid: '#111827', light: '#1a2332' }
+          },
+          fontFamily: {
+            mono: ['"Share Tech Mono"', 'monospace'],
+            display: ['"Orbitron"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@23/dist/tween.umd.js"></script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body class="bg-black text-white overflow-hidden m-0 p-0 font-mono">
+
+  <!-- WALLPAPER: capa 1,2,3 -->
+  <div class="fixed inset-0 w-screen h-screen z-0"
+       style="background: url('/wallpapers/capa 1,2,3.jpeg') center/cover no-repeat;">
+  </div>
+
+  <!-- THREE.JS CANVAS -->
+  <div id="canvas-container" class="fixed inset-0 w-screen h-screen z-[1]"></div>
+
+  <!-- NAV -->
+  <nav class="fixed top-0 left-0 right-0 z-20 pointer-events-auto">
+    <div class="flex items-center justify-between px-6 py-4">
+      <a href="/" class="flex items-center gap-3 no-underline">
+        <svg class="w-8 h-8 text-neon-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <span class="text-neon-cyan font-display font-bold text-lg tracking-widest neon-text">THE JEDI FORGE</span>
+      </a>
+      <div class="flex items-center gap-6">
+        <a href="/configurator" class="text-sm text-neon-cyan transition-colors duration-300 tracking-wider no-underline">CONFIGURATOR</a>
+        <a href="/gallery" class="text-sm text-gray-400 hover:text-neon-cyan transition-colors duration-300 tracking-wider no-underline">GALLERY</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- UI PANELS -->
+  <div class="fixed inset-0 w-screen h-screen z-10 pointer-events-none">
+
+    <!-- Center Top: Status + Power Toggle -->
+    <div class="absolute top-20 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 animate-fade-in pointer-events-auto">
+      <div id="config-status" class="cyber-panel px-6 py-2 text-center">
+        <p class="text-[0.65rem] text-gray-400 tracking-widest">COMPONENTS DETONATED.</p>
+        <p class="text-[0.65rem] text-neon-cyan tracking-widest">SELECT MATERIALS & CRYSTAL.</p>
+      </div>
+      <button id="btn-power" class="btn-ensamblar">
+        <span class="flex items-center gap-2">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/>
+          </svg>
+          <span id="power-label">FINISH & ENSAMBLAR</span>
+        </span>
+      </button>
+      <a href="/order" id="btn-complete-order" class="btn-complete-order inline-block" style="display:none;">
+        <span class="flex items-center gap-2">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          COMPLETE ORDER
+        </span>
+      </a>
+    </div>
+
+    <!-- Left Panel: Hilt Sleeve -->
+    <div class="absolute left-4 top-20 bottom-20 w-52 z-20 animate-slide-left pointer-events-auto" style="animation-delay: 0.1s;">
+      <div class="cyber-panel p-5 h-full flex flex-col">
+        <div class="panel-label">[ HILT SLEEVE COMPONENT ]</div>
+        <div class="flex flex-col gap-4 flex-1">
+          <div class="flex flex-col items-center gap-2">
+            <button class="material-thumb selected" data-sleeve="brushedSteel"
+                    style="background: linear-gradient(135deg, #aaaaaa 0%, #888888 100%);"></button>
+            <span class="text-[0.6rem] text-gray-400 tracking-wider text-center">Brushed Steel</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <button class="material-thumb" data-sleeve="darkBronzed"
+                    style="background: linear-gradient(135deg, #8c5a2b 0%, #6a4420 100%);"></button>
+            <span class="text-[0.6rem] text-gray-400 tracking-wider text-center">Dark Bronzed</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <button class="material-thumb" data-sleeve="ancientStone"
+                    style="background: linear-gradient(135deg, #444444 0%, #222222 100%);"></button>
+            <span class="text-[0.6rem] text-gray-400 tracking-wider text-center">Ancient Stone</span>
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-cyan-500/10">
+          <p class="text-[0.55rem] text-gray-500 tracking-wider text-center">SELECT COMPONENT TO MODIFY</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Crystal -->
+    <div class="absolute right-4 top-20 bottom-20 w-52 z-20 animate-slide-right pointer-events-auto" style="animation-delay: 0.1s;">
+      <div class="cyber-panel-purple p-5 h-full flex flex-col">
+        <div class="panel-label-purple">[ CORE KYBER CRYSTAL ]</div>
+        <div class="grid grid-cols-2 gap-4 flex-1 content-start">
+          <div class="flex flex-col items-center gap-2">
+            <button class="crystal-thumb selected" data-crystal="blue">
+              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="#0088ff" filter="drop-shadow(0 0 6px #0088ff)">
+                <polygon points="12,2 20,10 12,22 4,10" opacity="0.9"/>
+                <polygon points="12,2 16,6 12,22 8,6" fill="white" opacity="0.3"/>
+              </svg>
+            </button>
+            <span class="text-[0.6rem] text-gray-400 tracking-wider">Blue</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <button class="crystal-thumb" data-crystal="green">
+              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="#00ff66" filter="drop-shadow(0 0 6px #00ff66)">
+                <polygon points="12,2 20,10 12,22 4,10" opacity="0.9"/>
+                <polygon points="12,2 16,6 12,22 8,6" fill="white" opacity="0.3"/>
+              </svg>
+            </button>
+            <span class="text-[0.6rem] text-gray-400 tracking-wider">Green</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <button class="crystal-thumb" data-crystal="purple">
+              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="#aa00ff" filter="drop-shadow(0 0 6px #aa00ff)">
+                <polygon points="12,2 20,10 12,22 4,10" opacity="0.9"/>
+                <polygon points="12,2 16,6 12,22 8,6" fill="white" opacity="0.3"/>
+              </svg>
+            </button>
+            <span class="text-[0.6rem] text-gray-400 tracking-wider">Purple</span>
+          </div>
+          <div class="flex flex-col items-center gap-2">
+            <button class="crystal-thumb" data-crystal="white">
+              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="#ffffff" filter="drop-shadow(0 0 6px #ffffff)">
+                <polygon points="12,2 20,10 12,22 4,10" opacity="0.9"/>
+                <polygon points="12,2 16,6 12,22 8,6" fill="white" opacity="0.3"/>
+              </svg>
+            </button>
+            <span class="text-[0.6rem] text-gray-400 tracking-wider">White</span>
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-purple-500/10">
+          <p class="text-[0.55rem] text-gray-500 tracking-wider text-center">SELECT COMPONENT TO MODIFY</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Bottom: Status info -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 animate-fade-in pointer-events-auto" style="animation-delay: 0.3s;">
+      <div class="text-center">
+        <p class="text-[0.5rem] text-gray-500 tracking-widest">DRAG TO ROTATE • SCROLL TO ZOOM</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/configurator-page.js"></script>
+</body>
+</html>

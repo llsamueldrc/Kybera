@@ -1,0 +1,645 @@
+/* ═══════════════════════════════════════════════════════════════
+   KYBERA — Custom Styles
+   Neon glow, cyber-panels, animations, scrollbar
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --cyan: #00ffff;
+  --purple: #aa00ff;
+  --blue: #0088ff;
+  --green: #00ff66;
+  --dark-bg: #0a0e17;
+  --panel-bg: rgba(0, 0, 0, 0.82);
+  --border-glow: rgba(0, 255, 255, 0.25);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  color: #e0e0e0;
+  font-family: 'Share Tech Mono', monospace;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+#canvas-container {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: #0a0e17;
+}
+
+#screen-container {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: transparent !important;
+}
+
+/* ── Neon Text Glow ────────────────────────────────────────── */
+.neon-text {
+  text-shadow:
+    0 0 7px var(--cyan),
+    0 0 20px rgba(0, 255, 255, 0.4),
+    0 0 40px rgba(0, 255, 255, 0.15);
+}
+
+.neon-text-purple {
+  text-shadow:
+    0 0 7px var(--purple),
+    0 0 20px rgba(170, 0, 255, 0.4),
+    0 0 40px rgba(170, 0, 255, 0.15);
+}
+
+.neon-text-glow {
+  text-shadow:
+    0 0 10px var(--cyan),
+    0 0 30px var(--cyan),
+    0 0 60px rgba(0, 255, 255, 0.3);
+}
+
+/* ── Cyber Panel ───────────────────────────────────────────── */
+.cyber-panel {
+  background: var(--panel-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glow);
+  box-shadow:
+    0 0 20px rgba(0, 255, 255, 0.06),
+    inset 0 0 30px rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+}
+
+.cyber-panel-purple {
+  background: var(--panel-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(170, 0, 255, 0.25);
+  box-shadow:
+    0 0 20px rgba(170, 0, 255, 0.06),
+    inset 0 0 30px rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+}
+
+/* ── Panel Header Label ────────────────────────────────────── */
+.panel-label {
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--cyan);
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.panel-label-purple {
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--purple);
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(170, 0, 255, 0.15);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+/* ── Buttons ───────────────────────────────────────────────── */
+.btn-cyber {
+  background: rgba(0, 255, 255, 0.08);
+  border: 1px solid rgba(0, 255, 255, 0.4);
+  color: var(--cyan);
+  padding: 10px 24px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.btn-cyber:hover {
+  background: rgba(0, 255, 255, 0.18);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.btn-cyber:active {
+  transform: scale(0.97);
+}
+
+.btn-power {
+  background: rgba(0, 255, 255, 0.05);
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  color: var(--cyan);
+  padding: 12px 32px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-power::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.15), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-power:hover::before {
+  left: 100%;
+}
+
+.btn-power:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.25);
+}
+
+.btn-power.active {
+  background: rgba(0, 255, 255, 0.15);
+  border-color: var(--cyan);
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+}
+
+/* ── Material Thumbnail ────────────────────────────────────── */
+.material-thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.material-thumb:hover {
+  border-color: rgba(0, 255, 255, 0.5);
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.15);
+}
+
+.material-thumb.selected {
+  border-color: var(--cyan);
+  box-shadow: 0 0 18px rgba(0, 255, 255, 0.35);
+}
+
+.material-thumb.selected::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid var(--cyan);
+  border-radius: 8px;
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+/* ── Crystal Thumbnail ─────────────────────────────────────── */
+.crystal-thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crystal-thumb:hover {
+  transform: scale(1.08);
+}
+
+.crystal-thumb.selected {
+  border-color: var(--cyan);
+  box-shadow: 0 0 18px rgba(0, 255, 255, 0.35);
+}
+
+/* ── Form Inputs ───────────────────────────────────────────── */
+.cyber-input {
+  background: rgba(0, 255, 255, 0.04);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  color: #e0e0e0;
+  padding: 10px 14px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  outline: none;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.cyber-input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.15);
+}
+
+.cyber-input::placeholder {
+  color: rgba(0, 255, 255, 0.25);
+  font-size: 0.7rem;
+}
+
+/* ── Loading Spinner ───────────────────────────────────────── */
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(0, 255, 255, 0.1);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* ── Progress Bar ──────────────────────────────────────────── */
+.progress-track {
+  height: 6px;
+  background: rgba(0, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  border-radius: 3px;
+  transition: width 0.8s ease;
+}
+
+/* ── Timeline ──────────────────────────────────────────────── */
+.timeline-step {
+  position: relative;
+  padding-left: 36px;
+  padding-bottom: 20px;
+  border-left: 2px solid rgba(0, 255, 255, 0.12);
+}
+
+.timeline-step:last-child {
+  border-left-color: transparent;
+  padding-bottom: 0;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -9px;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  background: var(--dark-bg);
+}
+
+.timeline-step.done .timeline-dot {
+  background: var(--green);
+  border-color: var(--green);
+  box-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
+}
+
+.timeline-step.active .timeline-dot {
+  background: var(--cyan);
+  border-color: var(--cyan);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* ── Stars Rating ──────────────────────────────────────────── */
+.stars {
+  color: #fbbf24;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--cyan);
+  border-radius: 2px;
+}
+
+/* ── Table ─────────────────────────────────────────────────── */
+.cyber-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.7rem;
+}
+
+.cyber-table th {
+  text-align: left;
+  color: var(--cyan);
+  font-weight: normal;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+}
+
+.cyber-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #b0b0b0;
+}
+
+.cyber-table tr:hover td {
+  background: rgba(0, 255, 255, 0.03);
+}
+
+/* ── Animations ────────────────────────────────────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse-ring {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.05); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 255, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.8); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes blade-extend {
+  from { transform: scaleY(0); opacity: 0; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+
+@keyframes scan-line {
+  0% { top: -5%; }
+  100% { top: 105%; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out both;
+}
+
+.animate-slide-left {
+  animation: slide-in-left 0.5s ease-out both;
+}
+
+.animate-slide-right {
+  animation: slide-in-right 0.5s ease-out both;
+}
+
+/* ── Scan Line Effect (optional overlay) ───────────────────── */
+.scan-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.15), transparent);
+  animation: scan-line 6s linear infinite;
+  pointer-events: none;
+}
+
+/* ── Review Card ───────────────────────────────────────────── */
+.review-card {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 255, 255, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.review-card:hover {
+  border-color: rgba(0, 255, 255, 0.25);
+}
+
+/* ── Landing BG Particles (CSS-only) ──────────────────────── */
+.landing-bg {
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(0, 255, 255, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 70%, rgba(170, 0, 255, 0.04) 0%, transparent 50%),
+    linear-gradient(180deg, #070b14 0%, #0a0e17 40%, #0f1520 100%);
+}
+
+/* ── Admin Screen Panel (integrated with curved wallpaper) ── */
+.admin-screen-panel {
+  background: rgba(0, 20, 35, 0.28);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  border: 1px solid rgba(0, 255, 255, 0.1);
+  box-shadow:
+    0 0 40px rgba(0, 255, 255, 0.02),
+    inset 0 0 60px rgba(0, 15, 30, 0.3);
+  border-radius: 4px;
+}
+
+.admin-screen-panel .cyber-table th {
+  border-bottom-color: rgba(0, 255, 255, 0.1);
+}
+
+.admin-screen-panel .cyber-table td {
+  border-bottom-color: rgba(0, 255, 255, 0.03);
+}
+
+.admin-stat-card {
+  background: rgba(0, 20, 35, 0.45);
+  border: 1px solid rgba(0, 255, 255, 0.08);
+  border-radius: 4px;
+}
+
+.admin-chart-bar {
+  border-radius: 2px 2px 0 0;
+  opacity: 0.65;
+  transition: opacity 0.3s ease;
+}
+
+.admin-chart-bar:hover {
+  opacity: 1;
+}
+
+/* ── Landing Nav ────────────────────────────────────────────── */
+.landing-nav {
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.08);
+}
+
+.landing-nav a {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  text-decoration: none;
+}
+
+.landing-nav a:hover {
+  color: #00ffff;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+}
+
+/* ── Landing CTA Button ─────────────────────────────────────── */
+.landing-cta {
+  background: rgba(0, 255, 255, 0.06);
+  border: 1px solid rgba(0, 255, 255, 0.5);
+  color: var(--cyan);
+  padding: 14px 36px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.landing-cta::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.15), transparent, rgba(0, 255, 255, 0.1));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.landing-cta:hover {
+  background: rgba(0, 255, 255, 0.12);
+  border-color: var(--cyan);
+  box-shadow:
+    0 0 25px rgba(0, 255, 255, 0.25),
+    0 0 50px rgba(0, 255, 255, 0.1),
+    inset 0 0 20px rgba(0, 255, 255, 0.05);
+  text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+.landing-cta:hover::before {
+  opacity: 1;
+}
+
+.landing-cta:active {
+  transform: scale(0.97);
+}
+
+/* ── Hologram Panel (landing schematics) ────────────────────── */
+.hologram-panel {
+  background: rgba(0, 20, 30, 0.35);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(0, 255, 255, 0.08);
+  border-radius: 4px;
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.03);
+}
+
+/* ── Configurator: Ensamblar Button ─────────────────────────── */
+.btn-ensamblar {
+  background: rgba(0, 255, 255, 0.06);
+  border: 1px solid rgba(0, 255, 255, 0.5);
+  color: var(--cyan);
+  padding: 12px 28px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  border-radius: 4px;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+}
+
+.btn-ensamblar:hover {
+  background: rgba(0, 255, 255, 0.14);
+  border-color: var(--cyan);
+  box-shadow:
+    0 0 20px rgba(0, 255, 255, 0.25),
+    0 0 40px rgba(0, 255, 255, 0.08),
+    inset 0 0 15px rgba(0, 255, 255, 0.04);
+}
+
+.btn-ensamblar:active {
+  transform: scale(0.97);
+}
+
+/* ── Configurator: Complete Order Button ────────────────────── */
+.btn-complete-order {
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid rgba(0, 255, 255, 0.6);
+  color: var(--cyan);
+  padding: 10px 24px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  border-radius: 4px;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.btn-complete-order:hover {
+  background: rgba(0, 255, 255, 0.2);
+  border-color: var(--cyan);
+  box-shadow:
+    0 0 25px rgba(0, 255, 255, 0.3),
+    0 0 50px rgba(0, 255, 255, 0.1);
+  animation: none;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 255, 0.15); }
+  50% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
+}
+
+/* ── Configurator: Energy Rings ─────────────────────────────── */
+.energy-ring {
+  position: absolute;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.energy-ring.active {
+  opacity: 1;
+  animation: energy-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes energy-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0.6; }
+}
+
+/* ── Utility ───────────────────────────────────────────────── */
+.pointer-events-auto { pointer-events: auto; }
+.pointer-events-none { pointer-events: none; }

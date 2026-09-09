@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KYBERA — Gallery</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            neon: { cyan: '#00ffff', purple: '#aa00ff', blue: '#0088ff', green: '#00ff66' },
+            hangar: { dark: '#0a0e17', mid: '#111827', light: '#1a2332' }
+          },
+          fontFamily: {
+            mono: ['"Share Tech Mono"', 'monospace'],
+            display: ['"Orbitron"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-black text-white overflow-hidden m-0 p-0 font-mono">
+
+  <!-- WALLPAPER: capa 1,2,3 -->
+  <div class="fixed inset-0 w-screen h-screen z-0"
+       style="background: url('/wallpapers/capa 1,2,3.jpeg') center/cover no-repeat;">
+  </div>
+
+  <!-- NAV -->
+  <nav class="fixed top-0 left-0 right-0 z-20 pointer-events-auto">
+    <div class="flex items-center justify-between px-6 py-4">
+      <a href="/" class="flex items-center gap-3 no-underline">
+        <svg class="w-8 h-8 text-neon-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <span class="text-neon-cyan font-display font-bold text-lg tracking-widest neon-text">THE JEDI FORGE</span>
+      </a>
+      <div class="flex items-center gap-6">
+        <a href="/configurator" class="text-sm text-gray-400 hover:text-neon-cyan transition-colors duration-300 tracking-wider no-underline">CONFIGURATOR</a>
+        <a href="/gallery" class="text-sm text-neon-cyan transition-colors duration-300 tracking-wider no-underline">GALLERY</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="fixed inset-0 w-screen h-screen z-10 flex items-center justify-center p-4 md:p-8 pointer-events-auto">
+    <div class="flex flex-col lg:flex-row gap-6 max-w-6xl w-full animate-fade-in">
+
+      <!-- Reviews -->
+      <div class="cyber-panel p-6 flex-1 max-h-[85vh] overflow-y-auto">
+        <div class="flex items-center gap-3 mb-5 flex-wrap">
+          <button class="filter-tab px-3 py-1 text-[0.6rem] tracking-widest border rounded border-cyan-400 text-cyan-400 bg-cyan-400/10 transition-all duration-300" data-filter="all">[ ALL ]</button>
+          <button class="filter-tab px-3 py-1 text-[0.6rem] tracking-widest border rounded border-gray-600 text-gray-500 hover:border-gray-400 hover:text-gray-400 transition-all duration-300" data-filter="amethyst">[ AMETHYST ]</button>
+          <button class="filter-tab px-3 py-1 text-[0.6rem] tracking-widest border rounded border-gray-600 text-gray-500 hover:border-gray-400 hover:text-gray-400 transition-all duration-300" data-filter="cyan">[ CYAN ]</button>
+          <button class="filter-tab px-3 py-1 text-[0.6rem] tracking-widest border rounded border-gray-600 text-gray-500 hover:border-gray-400 hover:text-gray-400 transition-all duration-300" data-filter="emerald">[ EMERALD ]</button>
+        </div>
+        <div id="reviews-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+      </div>
+
+      <!-- Order Tracking -->
+      <div class="cyber-panel-purple p-6 w-full lg:w-80 flex flex-col">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-[0.7rem] text-gray-400 tracking-widest">ORDER TRACKING</span>
+          <button class="text-gray-500 hover:text-cyan-400 transition-colors">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="mb-4">
+          <span class="text-neon-cyan font-display text-xl tracking-wider">#KYB-9942-X</span>
+        </div>
+        <div class="progress-track mb-6">
+          <div class="progress-fill" style="width: 28%"></div>
+        </div>
+        <div class="flex flex-col flex-1">
+          <div class="timeline-step done">
+            <div class="timeline-dot"></div>
+            <div class="flex items-center gap-2">
+              <span class="text-[0.7rem] text-green-400">01 Order Received</span>
+              <svg class="w-4 h-4 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <p class="text-[0.5rem] text-green-500/60 tracking-wider mt-1 ml-0">[DONE]</p>
+          </div>
+          <div class="timeline-step active">
+            <div class="timeline-dot"></div>
+            <div class="flex items-center gap-2">
+              <span class="text-[0.7rem] text-neon-cyan">02 Hilt Forging</span>
+              <svg class="w-3 h-3 text-neon-cyan animate-spin ml-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20"/></svg>
+            </div>
+            <p class="text-[0.5rem] text-cyan-500/60 tracking-wider mt-1 ml-0">[IN PROGRESS]</p>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-dot"></div>
+            <span class="text-[0.7rem] text-gray-500">03 Kyber Core Tuning</span>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-dot"></div>
+            <span class="text-[0.7rem] text-gray-500">04 Quality Test</span>
+          </div>
+          <div class="timeline-step">
+            <div class="timeline-dot"></div>
+            <span class="text-[0.7rem] text-gray-500">05 Starport Shipping</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const REVIEWS = [
+      { name: 'Customer Name', stars: 5, text: 'Incredible saber!', crystal: 'emerald', imgColor: '#00ff66' },
+      { name: 'Customer Sisanh', stars: 5, text: 'Absolutely perfect', crystal: 'emerald', imgColor: '#00ff66' },
+      { name: 'Customer Nomes', stars: 5, text: 'Great build!', crystal: 'amethyst', imgColor: '#aa00ff' },
+      { name: 'Customer User', stars: 5, text: 'Lights up the night', crystal: 'amethyst', imgColor: '#aa00ff' }
+    ];
+    let activeFilter = 'all';
+
+    function renderReviews() {
+      const filtered = activeFilter === 'all' ? REVIEWS : REVIEWS.filter(r => r.crystal === activeFilter);
+      document.getElementById('reviews-grid').innerHTML = filtered.map(r => `
+        <div class="review-card p-4 animate-fade-in">
+          <div class="w-full h-28 rounded mb-3 flex items-center justify-center relative overflow-hidden"
+               style="background: radial-gradient(ellipse at center, ${r.imgColor}22 0%, #0a0e17 80%);">
+            <svg viewBox="0 0 80 40" class="w-16 h-8 opacity-60">
+              <rect x="20" y="18" width="40" height="4" rx="2" fill="${r.imgColor}" opacity="0.7">
+                <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2s" repeatCount="indefinite"/>
+              </rect>
+              <rect x="35" y="16" width="10" height="8" rx="1" fill="#555"/>
+            </svg>
+          </div>
+          <div class="stars mb-1">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</div>
+          <p class="text-[0.65rem] text-gray-400 mb-1">${r.name}</p>
+          <p class="text-[0.7rem] text-white">${r.text}</p>
+        </div>
+      `).join('');
+    }
+
+    document.querySelectorAll('[data-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeFilter = btn.dataset.filter;
+        document.querySelectorAll('[data-filter]').forEach(b => {
+          const isActive = activeFilter === b.dataset.filter;
+          b.className = `filter-tab px-3 py-1 text-[0.6rem] tracking-widest border rounded transition-all duration-300 ${
+            isActive ? 'border-cyan-400 text-cyan-400 bg-cyan-400/10' : 'border-gray-600 text-gray-500 hover:border-gray-400 hover:text-gray-400'
+          }`;
+        });
+        renderReviews();
+      });
+    });
+
+    renderReviews();
+  </script>
+</body>
+</html>

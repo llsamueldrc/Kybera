@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KYBERA — Orden</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            neon: { cyan: '#00ffff', purple: '#aa00ff', blue: '#0088ff', green: '#00ff66' },
+            hangar: { dark: '#0a0e17', mid: '#111827', light: '#1a2332' }
+          },
+          fontFamily: {
+            mono: ['"Share Tech Mono"', 'monospace'],
+            display: ['"Orbitron"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-black text-white overflow-hidden m-0 p-0 font-mono">
+
+  <!-- WALLPAPER: capa 1,2,3 -->
+  <div class="fixed inset-0 w-screen h-screen z-0"
+       style="background: url('/wallpapers/capa 1,2,3.jpeg') center/cover no-repeat;">
+  </div>
+
+  <!-- NAV -->
+  <nav class="fixed top-0 left-0 right-0 z-20 pointer-events-auto">
+    <div class="flex items-center justify-between px-6 py-4">
+      <a href="/" class="flex items-center gap-3 no-underline">
+        <svg class="w-8 h-8 text-neon-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <span class="text-neon-cyan font-display font-bold text-lg tracking-widest neon-text">THE JEDI FORGE</span>
+      </a>
+      <div class="flex items-center gap-6">
+        <a href="/configurator" class="text-sm text-gray-400 hover:text-neon-cyan transition-colors duration-300 tracking-wider no-underline">CONFIGURATOR</a>
+        <a href="/gallery" class="text-sm text-gray-400 hover:text-neon-cyan transition-colors duration-300 tracking-wider no-underline">GALLERY</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="fixed inset-0 w-screen h-screen z-10 flex items-center justify-center p-4 md:p-8 pointer-events-auto">
+    <div class="flex flex-col lg:flex-row gap-6 max-w-6xl w-full animate-fade-in">
+
+      <!-- Order Form -->
+      <div class="cyber-panel p-6 flex-1 max-h-[85vh] overflow-y-auto">
+        <div class="panel-label text-center mb-6">[ ORDER ACQUISITION REGISTRY ]</div>
+        <form id="order-form" class="flex flex-col gap-5">
+          <div>
+            <p class="text-[0.6rem] text-cyan-400/60 tracking-widest mb-3">[ CUSTOMER IDENTIFICATION ]</p>
+            <div class="flex flex-col gap-3">
+              <div>
+                <label class="text-[0.55rem] text-gray-500 tracking-wider mb-1 block">Name Full:</label>
+                <input type="text" class="cyber-input" placeholder="Enter full name">
+              </div>
+              <div>
+                <label class="text-[0.55rem] text-gray-500 tracking-wider mb-1 block">Corporate Email:</label>
+                <input type="email" class="cyber-input" placeholder="name@corporation.com">
+              </div>
+              <div>
+                <label class="text-[0.55rem] text-gray-500 tracking-wider mb-1 block">Contact ID:</label>
+                <input type="text" class="cyber-input" placeholder="Identification code">
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="text-[0.6rem] text-cyan-400/60 tracking-widest mb-3">[ SHIPPING LOGISTICS ]</p>
+            <div class="flex flex-col gap-3">
+              <div>
+                <label class="text-[0.55rem] text-gray-500 tracking-wider mb-1 block">Sector/Planet:</label>
+                <input type="text" class="cyber-input" placeholder="e.g. Naboo System">
+              </div>
+              <div>
+                <label class="text-[0.55rem] text-gray-500 tracking-wider mb-1 block">Starport address:</label>
+                <input type="text" class="cyber-input" placeholder="Docking Bay / Platform">
+              </div>
+              <div class="flex gap-3">
+                <div class="flex-1">
+                  <label class="text-[0.55rem] text-gray-500 tracking-wider mb-1 block">Cargo Bay Number:</label>
+                  <input type="text" class="cyber-input" placeholder="Bay #">
+                </div>
+                <div class="flex-1">
+                  <label class="text-[0.55rem] text-gray-500 tracking-wider mb-1 block">Sub-sector / Area Code:</label>
+                  <input type="text" class="cyber-input" placeholder="Sub-sector">
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="btn-cyber w-full py-4 mt-2">
+            <span class="flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              CONFIRM ADQUISITION & PROCESS PAYMENT
+            </span>
+          </button>
+        </form>
+        <p class="text-[0.5rem] text-gray-600 tracking-wider text-center mt-4">
+          PAYMENT TERMS: CORPORATE ACCOUNT / CONFIRMATION VIA ENCRYPTED EMAIL
+        </p>
+      </div>
+
+      <!-- Config Summary -->
+      <div class="cyber-panel-purple p-6 w-full lg:w-80 flex flex-col">
+        <div class="panel-label-purple text-center mb-4">[ CONFIGURATION SUMMARY ]</div>
+        <div class="w-full h-32 mb-4 flex items-center justify-center relative overflow-hidden"
+             style="background: radial-gradient(ellipse, rgba(0,255,255,0.08) 0%, transparent 70%);">
+          <svg viewBox="0 0 120 20" class="w-full h-full opacity-70">
+            <rect x="5" y="8" width="8" height="4" rx="1" fill="#666"/>
+            <rect x="13" y="7" width="12" height="6" rx="1" fill="#555"/>
+            <rect x="25" y="6" width="28" height="8" rx="2" fill="#aaaaaa"/>
+            <circle cx="39" cy="10" r="2" fill="#0088ff" opacity="0.9"/>
+            <rect x="53" y="7" width="10" height="6" rx="1" fill="#666"/>
+            <rect x="63" y="8" width="6" height="4" rx="1" fill="#777"/>
+          </svg>
+        </div>
+        <div class="flex flex-col gap-3 flex-1 text-[0.7rem]">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-500">Emitter Type:</span>
+            <span class="text-gray-300">Vanguard Industrial</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-500">Body Sleeve:</span>
+            <span class="text-neon-cyan">Brushed Steel</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-500">Pommel:</span>
+            <span class="text-gray-300">Reactor Cap X</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-500">Kyber Crystal:</span>
+            <span class="text-neon-cyan">Blue</span>
+          </div>
+        </div>
+        <div class="mt-6 pt-4 border-t border-purple-500/15">
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-gray-400">ORDER TOTAL:</span>
+            <span class="text-neon-cyan font-display tracking-wider">450 KYBER CREDITS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('order-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      window.location.href = '/gallery';
+    });
+  </script>
+</body>
+</html>
