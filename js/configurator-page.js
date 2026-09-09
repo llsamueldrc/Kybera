@@ -11,8 +11,8 @@ const CRYSTAL_COLORS = {
   green:  { hex: '#00ff66' },
   purple: { hex: '#ee66ff' },
   white:  { hex: '#ffffff' },
-  red:    { hex: '#ff6644' },
-  black:  { hex: '#777777' },
+  red:    { hex: '#ff4444' },
+  black:  { hex: '#1a1a1a' },
   yellow: { hex: '#ffcc00' }
 };
 const HILT_SLEEVES = {
@@ -123,11 +123,26 @@ const winMat = new THREE.MeshStandardMaterial({ color: 0x112233, metalness: 0.3,
 const windowMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 0.375, 32, 1, true), winMat);
 windowMesh.rotation.z = Math.PI / 2;
 crystalGroup.add(windowMesh);
+windowMesh.visible = false;
+housingMesh.visible = false;
 
 const crystalColor = CRYSTAL_COLORS[currentCrystal];
 const crystalMesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.5, 0), new THREE.MeshStandardMaterial({ color: new THREE.Color(crystalColor.hex), emissive: new THREE.Color(crystalColor.hex), emissiveIntensity: 1.2, metalness: 0.1, roughness: 0.1, transparent: true, opacity: 0.9 }));
 crystalMesh.scale.set(1, 1.3, 1);
 crystalGroup.add(crystalMesh);
+
+/* Lightning rays for black crystal */
+const lightningRays = [];
+for (let i = 0; i < 6; i++) {
+  const ray = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.008, 0.008, 1.2, 4),
+    new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 })
+  );
+  ray.rotation.z = Math.PI / 2;
+  crystalGroup.add(ray);
+  lightningRays.push(ray);
+}
+
 
 /* ── Sleeve / Body ── */
 const sleeveHilt = HILT_SLEEVES[currentSleeve];
@@ -217,7 +232,7 @@ scene.add(saberGroup);
 /* ── Exploded positions (along X axis) ── */
 const EXPLODED = {
   emitter:  new THREE.Vector3(-3.5, 0, 0),
-  crystal:  new THREE.Vector3(-1.2, 0.8, 0),
+  crystal:  new THREE.Vector3(-1.2, 0, 0),
   sleeve:   new THREE.Vector3(1.5, 0, 0),
   grip:     new THREE.Vector3(3.8, 0, 0)
 };
@@ -317,6 +332,8 @@ document.getElementById('btn-power').addEventListener('click', () => {
         btn.style.pointerEvents = 'auto';
         status.innerHTML = `<p class="text-[0.65rem] text-gray-400 tracking-widest">KYBER CORE ACTIVE.</p><p class="text-[0.65rem] text-neon-cyan tracking-widest">${CRYSTAL_COLORS[currentCrystal].hex.toUpperCase()} HARMONY.</p>`;
         completeBtn.style.display = 'inline-block';
+        housingMesh.visible = true;
+        windowMesh.visible = true;
       }).start();
 
   } else {
@@ -346,6 +363,8 @@ document.getElementById('btn-power').addEventListener('click', () => {
         isAnimating = false;
         label.textContent = 'FINISH & ENSAMBLAR';
         status.innerHTML = `<p class="text-[0.65rem] text-gray-400 tracking-widest">COMPONENTS DETONATED.</p><p class="text-[0.65rem] text-neon-cyan tracking-widest">SELECT MATERIALS & CRYSTAL.</p>`;
+        housingMesh.visible = false;
+        windowMesh.visible = false;
       }).start();
   }
 });
@@ -363,7 +382,7 @@ function animate() {
       saberGroup.position.y = 1.5 + floatY;
     } else {
       emitterGroup.position.y = floatY;
-      crystalGroup.position.y = 0.8 + floatY;
+      crystalGroup.position.y = floatY;
       sleeveGroup.position.y = floatY;
       gripGroup.position.y = floatY;
     }
@@ -371,6 +390,18 @@ function animate() {
 
   crystalMesh.material.emissiveIntensity = 1.0 + Math.sin(t * 3) * 0.2;
   crystalMesh.rotation.y = t * 0.5;
+
+  /* Lightning effect for black crystal */
+  if (currentCrystal === 'black') {
+    lightningRays.forEach((ray, i) => {
+      ray.material.opacity = 0.4 + Math.sin(t * 12 + i * 1.5) * 0.4;
+      ray.rotation.y = t * 3 + (i / 6) * Math.PI * 2;
+      ray.scale.set(1, 0.3 + Math.sin(t * 10 + i) * 0.3, 1);
+    });
+  } else {
+    lightningRays.forEach(ray => { ray.material.opacity = 0; });
+  }
+
 
   const diff = bladeTarget - bladeScale;
   if (Math.abs(diff) > 0.001) {
