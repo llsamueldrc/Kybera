@@ -9,10 +9,10 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 const CRYSTAL_COLORS = {
   blue:   { hex: '#00ccff' },
   green:  { hex: '#00ff66' },
-  purple: { hex: '#cc44ff' },
+  purple: { hex: '#ee66ff' },
   white:  { hex: '#ffffff' },
-  red:    { hex: '#ff3322' },
-  black:  { hex: '#555555' },
+  red:    { hex: '#ff6644' },
+  black:  { hex: '#777777' },
   yellow: { hex: '#ffcc00' }
 };
 const HILT_SLEEVES = {
@@ -217,7 +217,7 @@ scene.add(saberGroup);
 /* ── Exploded positions (along X axis) ── */
 const EXPLODED = {
   emitter:  new THREE.Vector3(-3.5, 0, 0),
-  crystal:  new THREE.Vector3(-1.2, 0, 0),
+  crystal:  new THREE.Vector3(-1.2, 0.8, 0),
   sleeve:   new THREE.Vector3(1.5, 0, 0),
   grip:     new THREE.Vector3(3.8, 0, 0)
 };
@@ -363,13 +363,13 @@ function animate() {
       saberGroup.position.y = 1.5 + floatY;
     } else {
       emitterGroup.position.y = floatY;
-      crystalGroup.position.y = floatY;
+      crystalGroup.position.y = 0.8 + floatY;
       sleeveGroup.position.y = floatY;
       gripGroup.position.y = floatY;
     }
   }
 
-  crystalMesh.material.emissiveIntensity = 2.0 + Math.sin(t * 3) * 0.3 + 1.0;
+  crystalMesh.material.emissiveIntensity = 1.0 + Math.sin(t * 3) * 0.2;
   crystalMesh.rotation.y = t * 0.5;
 
   const diff = bladeTarget - bladeScale;
