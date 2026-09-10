@@ -143,24 +143,20 @@ crystalGroup.add(crystalLight);
 
 /* ── Sleeve / Body ── */
 const sleeveHilt = HILT_SLEEVES[currentSleeve];
-const sleeveMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.93, 0.675, 5.1, 32), new THREE.MeshStandardMaterial({ color: sleeveHilt.color, metalness: sleeveHilt.metalness, roughness: sleeveHilt.roughness }));
+const sleeveMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.93, 0.675, 10.2, 32), new THREE.MeshStandardMaterial({ color: sleeveHilt.color, metalness: sleeveHilt.metalness, roughness: sleeveHilt.roughness }));
 sleeveMesh.rotation.z = Math.PI / 2;
 sleeveGroup.add(sleeveMesh);
 
 const srTop = new THREE.Mesh(new THREE.TorusGeometry(0.96, 0.0525, 8, 32), metalMat.clone());
 srTop.rotation.y = Math.PI / 2;
-srTop.position.x = 2.295;
+srTop.position.x = 4.59;
 sleeveGroup.add(srTop);
 
-const srBot = new THREE.Mesh(new THREE.TorusGeometry(0.705, 0.0525, 8, 32), metalMat.clone());
-srBot.rotation.y = Math.PI / 2;
-srBot.position.x = -2.295;
-sleeveGroup.add(srBot);
 
 for (let i = 0; i < 8; i++) {
   const g = new THREE.Mesh(new THREE.TorusGeometry(0.87 - (i / 8) * 0.18, 0.018, 6, 32), new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.6, roughness: 0.5 }));
   g.rotation.y = Math.PI / 2;
-  g.position.x = -2.04 + i * 0.561;
+  g.position.x = -4.08 + i * 1.122;
   sleeveGroup.add(g);
 }
 
@@ -209,9 +205,6 @@ bladeGlow.position.x = -5.25;
 emitterGroup.add(bladeGlow);
 
 /* ── Energy rings (hidden) ── */
-const energyRing1 = new THREE.Mesh(new THREE.TorusGeometry(0.75, 0.0225, 8, 32), new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 2, transparent: true, opacity: 0, side: THREE.DoubleSide }));
-energyRing1.rotation.y = Math.PI / 2;
-emitterGroup.add(energyRing1);
 
 const energyRing2 = new THREE.Mesh(new THREE.TorusGeometry(1.05, 0.015, 8, 32), new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 1.5, transparent: true, opacity: 0, side: THREE.DoubleSide }));
 energyRing2.rotation.y = Math.PI / 2;
@@ -228,10 +221,10 @@ scene.add(saberGroup);
 
 /* ── Exploded positions (along X axis) ── */
 const EXPLODED = {
-  emitter:  new THREE.Vector3(-3.5, 0, 0),
-  crystal:  new THREE.Vector3(-1.2, 0, 0),
-  sleeve:   new THREE.Vector3(1.5, 0, 0),
-  grip:     new THREE.Vector3(3.8, 0, 0)
+  emitter:  new THREE.Vector3(-5.5, 0, 0),
+  crystal:  new THREE.Vector3(-2.0, 0, 0),
+  sleeve:   new THREE.Vector3(3.0, 0, 0),
+  grip:     new THREE.Vector3(6.0, 0, 0)
 };
 const ASSEMBLED = {
   emitter:  new THREE.Vector3(0, 0, 0),
@@ -322,7 +315,6 @@ document.getElementById('btn-power').addEventListener('click', () => {
         crystalLight.intensity = 4;
         emitterLight.intensity = 1;
 
-        energyRing1.material.opacity = 0.6;
         energyRing2.material.opacity = 0.4;
 
         label.textContent = 'DESARMAR / EDITAR';
@@ -340,7 +332,6 @@ document.getElementById('btn-power').addEventListener('click', () => {
     bloomPass.strength = 0.8;
     crystalLight.intensity = 2.5;
     emitterLight.intensity = 0.3;
-    energyRing1.material.opacity = 0;
     energyRing2.material.opacity = 0;
     completeBtn.style.display = 'none';
 
@@ -430,9 +421,7 @@ function animate() {
   }
 
   if (bladeActive) {
-    energyRing1.rotation.x = t * 1.5;
     energyRing2.rotation.x = -t * 1.0;
-    energyRing1.material.opacity = 0.3 + Math.sin(t * 2) * 0.15;
     energyRing2.material.opacity = 0.2 + Math.sin(t * 2.5) * 0.1;
   }
 
