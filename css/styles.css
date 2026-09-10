@@ -80,9 +80,9 @@ html, body {
   background: var(--panel-bg);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  border: 1px solid rgba(170, 0, 255, 0.25);
+  border: 1px solid var(--border-glow);
   box-shadow:
-    0 0 20px rgba(170, 0, 255, 0.06),
+    0 0 20px rgba(0, 255, 255, 0.06),
     inset 0 0 20px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
 }
@@ -101,11 +101,11 @@ html, body {
 
 .panel-label-purple {
   font-family: 'Share Tech Mono', monospace;
-  color: var(--purple);
+  color: var(--cyan);
   font-size: 0.7rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(170, 0, 255, 0.15);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.15);
   padding-bottom: 8px;
   margin-bottom: 12px;
 }

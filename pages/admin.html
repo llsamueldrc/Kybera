@@ -33,56 +33,89 @@
        style="background: url('/wallpapers/capa 0.jpeg') center/cover no-repeat;">
   </div>
 
-  <!-- CONTENT: positioned to fit inside the curved screen area -->
-  <div class="fixed inset-0 z-10 pointer-events-auto overflow-y-auto"
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen" class="fixed inset-0 z-30 flex items-center justify-center pointer-events-auto">
+    <div class="cyber-panel p-8 w-full max-w-sm text-center animate-fade-in">
+      <div class="mb-6">
+        <svg class="w-12 h-12 text-neon-cyan mx-auto mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0110 0v4"/>
+        </svg>
+        <h2 class="font-display text-lg text-neon-cyan tracking-widest">ADMIN ACCESS</h2>
+        <p class="text-[0.55rem] text-gray-500 tracking-wider mt-1">ENTER CREDENTIALS TO PROCEED</p>
+      </div>
+      <form id="login-form" class="flex flex-col gap-4">
+        <input type="password" id="login-password" class="cyber-input text-center"
+               placeholder="Access Code" autocomplete="off">
+        <button type="submit" class="btn-cyber py-3">
+          <span class="text-[0.65rem] tracking-wider">AUTHENTICATE</span>
+        </button>
+        <p id="login-error" class="text-red-400 text-[0.6rem] hidden">INVALID ACCESS CODE</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- DASHBOARD (hidden until login) -->
+  <div id="dashboard" class="fixed inset-0 z-10 pointer-events-auto overflow-y-auto hidden"
        style="padding: 5vh 4vw 3vh 4vw;">
     <div class="flex flex-col lg:flex-row gap-5 max-w-6xl mx-auto h-full animate-fade-in">
 
-      <!-- Dashboard Panel — fits inside the main curved screen -->
+      <!-- Dashboard Panel -->
       <div class="admin-screen-panel p-5 flex-1 flex flex-col min-h-0">
-        <div class="panel-label mb-4 text-center" style="font-size:0.55rem;">ADMIN DASHBOARD — CONSOLIDATED ORDER VIEW</div>
+        <div class="flex items-center justify-between mb-4">
+          <div class="panel-label" style="font-size:0.55rem;">ADMIN DASHBOARD — ORDER MANAGEMENT</div>
+          <button id="btn-refresh" class="text-[0.5rem] text-gray-500 hover:text-neon-cyan tracking-wider transition-colors">
+            REFRESH
+          </button>
+        </div>
 
         <!-- Stats row -->
         <div class="flex gap-3 mb-4">
           <div class="admin-stat-card px-3 py-2 flex-1 min-w-0">
-            <p class="text-[0.5rem] text-gray-500 tracking-wider">ORDERS IN PROCESS</p>
-            <p class="text-neon-cyan font-display text-lg">42</p>
+            <p class="text-[0.5rem] text-gray-500 tracking-wider">TOTAL ORDERS</p>
+            <p id="stat-total" class="text-neon-cyan font-display text-lg">0</p>
           </div>
           <div class="admin-stat-card px-3 py-2 flex-1 min-w-0">
-            <p class="text-[0.5rem] text-gray-500 tracking-wider">PENDING ACTIONS</p>
-            <p class="text-yellow-400 font-display text-lg">5</p>
+            <p class="text-[0.5rem] text-gray-500 tracking-wider">FORGING</p>
+            <p id="stat-forging" class="text-yellow-400 font-display text-lg">0</p>
           </div>
           <div class="admin-stat-card px-3 py-2 flex-1 min-w-0">
-            <p class="text-[0.5rem] text-gray-500 tracking-wider">PRODUCTION STAGE</p>
-            <p class="text-green-400 font-display text-lg">0</p>
+            <p class="text-[0.5rem] text-gray-500 tracking-wider">SHIPPED</p>
+            <p id="stat-shipped" class="text-green-400 font-display text-lg">0</p>
           </div>
         </div>
 
         <!-- Status tracker chart -->
         <div class="mb-4">
-          <p class="text-[0.5rem] text-cyan-400/60 tracking-widest mb-2">STATUS TRACKER</p>
-          <div class="flex items-end gap-2 h-16 px-1">
+          <p class="text-[0.5rem] text-cyan-400/60 tracking-widest mb-2">STATUS DISTRIBUTION</p>
+          <div id="status-chart" class="flex items-end gap-2 h-16 px-1">
             <div class="flex flex-col items-center gap-0.5 flex-1 h-full justify-end">
-              <span class="text-[0.45rem] text-gray-500">18</span>
-              <div class="admin-chart-bar w-full" style="height:90%; background:#00ffff;"></div>
+              <span id="chart-forging-count" class="text-[0.45rem] text-gray-500">0</span>
+              <div id="chart-forging-bar" class="admin-chart-bar w-full" style="height:0%; background:#00ffff;"></div>
               <span class="text-[0.45rem] text-gray-500">Forging</span>
             </div>
             <div class="flex flex-col items-center gap-0.5 flex-1 h-full justify-end">
-              <span class="text-[0.45rem] text-gray-500">12</span>
-              <div class="admin-chart-bar w-full" style="height:60%; background:#00ff66;"></div>
+              <span id="chart-tuning-count" class="text-[0.45rem] text-gray-500">0</span>
+              <div id="chart-tuning-bar" class="admin-chart-bar w-full" style="height:0%; background:#00ff66;"></div>
               <span class="text-[0.45rem] text-gray-500">Tuning</span>
             </div>
             <div class="flex flex-col items-center gap-0.5 flex-1 h-full justify-end">
-              <span class="text-[0.45rem] text-gray-500">8</span>
-              <div class="admin-chart-bar w-full" style="height:40%; background:#aa00ff;"></div>
+              <span id="chart-test-count" class="text-[0.45rem] text-gray-500">0</span>
+              <div id="chart-test-bar" class="admin-chart-bar w-full" style="height:0%; background:#aa00ff;"></div>
               <span class="text-[0.45rem] text-gray-500">Test</span>
             </div>
             <div class="flex flex-col items-center gap-0.5 flex-1 h-full justify-end">
-              <span class="text-[0.45rem] text-gray-500">4</span>
-              <div class="admin-chart-bar w-full" style="height:20%; background:#888;"></div>
+              <span id="chart-ship-count" class="text-[0.45rem] text-gray-500">0</span>
+              <div id="chart-ship-bar" class="admin-chart-bar w-full" style="height:0%; background:#888;"></div>
               <span class="text-[0.45rem] text-gray-500">Ship</span>
             </div>
           </div>
+        </div>
+
+        <!-- Search -->
+        <div class="mb-3">
+          <input type="text" id="search-input" class="cyber-input w-full text-[0.65rem]"
+                 placeholder="Search by order code, name, or email...">
         </div>
 
         <!-- Orders table -->
@@ -90,71 +123,276 @@
           <table class="cyber-table">
             <thead>
               <tr>
-                <th>GUIDE #</th>
+                <th>ORDER #</th>
                 <th>CLIENT</th>
-                <th>SABER CONFIG</th>
+                <th>CONFIG</th>
+                <th>STATUS</th>
                 <th>ACTIONS</th>
               </tr>
             </thead>
-            <tbody>
-              <tr><td class="text-cyan-400/70">#KYB-9942-X</td><td>Marlon</td><td class="text-gray-400">Amethyst Hilt / Gold Accent</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option>Forging</option><option>Tuning</option><option>Test</option><option>Ship</option></select></td></tr>
-              <tr><td class="text-cyan-400/70">#KYB-9942-X</td><td>Methyst</td><td class="text-gray-400">Amethyst Hilt / Silver Grip</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option>Forging</option><option>Tuning</option><option>Test</option><option>Ship</option></select></td></tr>
-              <tr><td class="text-cyan-400/70">#KYB-9942-X</td><td>Shanon</td><td class="text-gray-400">Emerald Hilt / Silver Grip</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option selected>Tuning</option><option>Forging</option><option>Test</option><option>Ship</option></select></td></tr>
-              <tr><td class="text-cyan-400/70">#KYB-9942-X</td><td>Porios</td><td class="text-gray-400">Amethyst Hilt / Silver Grip</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option>Forging</option><option>Tuning</option><option>Test</option><option>Ship</option></select></td></tr>
-              <tr><td class="text-cyan-400/70">#KYB-9942-X</td><td>Forging</td><td class="text-gray-400">Emerald Hilt / Gold Accent</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option>Forging</option><option>Tuning</option><option>Test</option><option>Ship</option></select></td></tr>
-              <tr><td class="text-cyan-400/70">#KYB-9943-X</td><td>Junon</td><td class="text-gray-400">Amber Hilt / Gold Accent</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option selected>Tuning</option><option>Forging</option><option>Test</option><option>Ship</option></select></td></tr>
-              <tr><td class="text-cyan-400/70">#KYB-9943-X</td><td>Sharmaa</td><td class="text-gray-400">Amethyst Hilt / Gold Accent</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option selected>Tuning</option><option>Forging</option><option>Test</option><option>Ship</option></select></td></tr>
-              <tr><td class="text-cyan-400/70">#KYB-9942-X</td><td>Cris</td><td class="text-gray-400">Emerald Hilt / Silver Grip</td><td><select class="bg-transparent border border-cyan-500/15 text-[0.55rem] text-gray-400 px-1.5 py-0.5 rounded"><option selected>Tuning</option><option>Forging</option><option>Test</option><option>Ship</option></select></td></tr>
+            <tbody id="orders-tbody">
+              <tr>
+                <td colspan="5" class="text-center text-gray-500 py-4">Loading orders...</td>
+              </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- Order Tracking Panel — fits inside the right-side display -->
-      <div class="admin-screen-panel p-5 w-full lg:w-64 flex flex-col shrink-0">
+      <!-- Order Detail Panel -->
+      <div id="detail-panel" class="admin-screen-panel p-5 w-full lg:w-72 flex flex-col shrink-0 hidden">
         <div class="flex items-center justify-between mb-3">
-          <span class="text-[0.6rem] text-gray-400 tracking-widest">ORDER TRACKING</span>
+          <span class="text-[0.6rem] text-gray-400 tracking-widest">ORDER DETAIL</span>
+          <button id="btn-close-detail" class="text-gray-500 hover:text-neon-cyan text-xs">X</button>
         </div>
-        <div class="mb-3">
-          <span class="text-neon-cyan font-display text-base tracking-wider">#KYB-9942-X</span>
-        </div>
-        <div class="progress-track mb-4">
-          <div class="progress-fill" style="width: 28%"></div>
-        </div>
-        <div class="flex flex-col flex-1">
-          <div class="timeline-step done">
-            <div class="timeline-dot"></div>
-            <div class="flex items-center gap-2">
-              <span class="text-[0.6rem] text-green-400">01 Order Received</span>
-              <svg class="w-3.5 h-3.5 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-            <p class="text-[0.4rem] text-green-500/60 tracking-wider mt-0.5">[DONE]</p>
-          </div>
-          <div class="timeline-step active">
-            <div class="timeline-dot"></div>
-            <div class="flex items-center gap-2">
-              <span class="text-[0.6rem] text-neon-cyan">02 Hilt Forging</span>
-              <svg class="w-2.5 h-2.5 text-neon-cyan animate-spin ml-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20"/></svg>
-            </div>
-            <p class="text-[0.4rem] text-cyan-500/60 tracking-wider mt-0.5">[IN PROGRESS]</p>
-          </div>
-          <div class="timeline-step">
-            <div class="timeline-dot"></div>
-            <span class="text-[0.6rem] text-gray-500">03 Kyber Core Tuning</span>
-          </div>
-          <div class="timeline-step">
-            <div class="timeline-dot"></div>
-            <span class="text-[0.6rem] text-gray-500">04 Quality Test</span>
-          </div>
-          <div class="timeline-step">
-            <div class="timeline-dot"></div>
-            <span class="text-[0.6rem] text-gray-500">05 Starport Shipping</span>
-          </div>
+        <div id="detail-content">
+          <p class="text-gray-500 text-[0.6rem]">Select an order to view details</p>
         </div>
       </div>
 
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const ADMIN_PASSWORD = 'kybera2024';
+    const SUPABASE_URL = 'https://bmfmckurecmrpfaudaxa.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtZm1ja3VyZWNtcnBmYXVkYXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5NzQzNDcsImV4cCI6MjEwNDU1MDM0N30.iWLNVzHpWf38PU2hak4O6H8PkhnNnzyx5nM9y-wkb0E';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const SLEEVE_NAMES = {
+      brushedSteel: 'Brushed Steel',
+      darkBronzed: 'Dark Bronzed',
+      ancientStone: 'Ancient Stone'
+    };
+
+    const CRYSTAL_NAMES = {
+      blue: 'Blue', green: 'Green', purple: 'Purple',
+      white: 'White', red: 'Red', black: 'Black', yellow: 'Yellow'
+    };
+
+    const STATUS_COLORS = {
+      forging: 'text-yellow-400',
+      tuning: 'text-neon-cyan',
+      test: 'text-purple-400',
+      ship: 'text-gray-400',
+      delivered: 'text-green-400'
+    };
+
+    const STATUS_OPTIONS = ['forging', 'tuning', 'test', 'ship', 'delivered'];
+
+    let allOrders = [];
+    let selectedOrderId = null;
+
+    // LOGIN
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const pw = document.getElementById('login-password').value;
+      if (pw === ADMIN_PASSWORD) {
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        loadOrders();
+      } else {
+        document.getElementById('login-error').classList.remove('hidden');
+      }
+    });
+
+    // LOAD ORDERS
+    async function loadOrders() {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Load error:', error);
+        return;
+      }
+
+      allOrders = data || [];
+      renderStats();
+      renderTable(allOrders);
+    }
+
+    // RENDER STATS
+    function renderStats() {
+      const total = allOrders.length;
+      const forging = allOrders.filter(o => o.status === 'forging').length;
+      const tuning = allOrders.filter(o => o.status === 'tuning').length;
+      const test = allOrders.filter(o => o.status === 'test').length;
+      const ship = allOrders.filter(o => o.status === 'ship').length;
+      const delivered = allOrders.filter(o => o.status === 'delivered').length;
+
+      document.getElementById('stat-total').textContent = total;
+      document.getElementById('stat-forging').textContent = forging + tuning;
+      document.getElementById('stat-shipped').textContent = delivered;
+
+      const maxCount = Math.max(forging, tuning, test, ship, 1);
+
+      document.getElementById('chart-forging-count').textContent = forging;
+      document.getElementById('chart-forging-bar').style.height = (forging / maxCount * 100) + '%';
+
+      document.getElementById('chart-tuning-count').textContent = tuning;
+      document.getElementById('chart-tuning-bar').style.height = (tuning / maxCount * 100) + '%';
+
+      document.getElementById('chart-test-count').textContent = test;
+      document.getElementById('chart-test-bar').style.height = (test / maxCount * 100) + '%';
+
+      document.getElementById('chart-ship-count').textContent = ship + delivered;
+      document.getElementById('chart-ship-bar').style.height = ((ship + delivered) / maxCount * 100) + '%';
+    }
+
+    // RENDER TABLE
+    function renderTable(orders) {
+      const tbody = document.getElementById('orders-tbody');
+      if (orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-500 py-4">No orders found</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = orders.map(o => {
+        const sleeveName = SLEEVE_NAMES[o.sleeve] || o.sleeve;
+        const crystalName = CRYSTAL_NAMES[o.crystal] || o.crystal;
+        const statusColor = STATUS_COLORS[o.status] || 'text-gray-400';
+        const options = STATUS_OPTIONS.map(s =>
+          `<option value="${s}" ${s === o.status ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1)}</option>`
+        ).join('');
+
+        return `<tr data-id="${o.id}">
+          <td class="text-cyan-400/70">#${o.order_code}</td>
+          <td>${o.customer_name || 'N/A'}</td>
+          <td class="text-gray-400">${sleeveName} / ${crystalName}</td>
+          <td>
+            <select class="status-select bg-transparent border border-cyan-500/15 text-[0.55rem] ${statusColor} px-1.5 py-0.5 rounded" data-id="${o.id}">
+              ${options}
+            </select>
+          </td>
+          <td>
+            <button class="detail-btn text-[0.5rem] text-gray-500 hover:text-neon-cyan tracking-wider" data-id="${o.id}">VIEW</button>
+          </td>
+        </tr>`;
+      }).join('');
+
+      // Status change listeners
+      tbody.querySelectorAll('.status-select').forEach(sel => {
+        sel.addEventListener('change', async (e) => {
+          const id = e.target.dataset.id;
+          const newStatus = e.target.value;
+          await supabase.from('orders').update({ status: newStatus, updated_at: new Date().toISOString() }).eq('id', id);
+          loadOrders();
+        });
+      });
+
+      // Detail view listeners
+      tbody.querySelectorAll('.detail-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          showDetail(e.target.dataset.id);
+        });
+      });
+    }
+
+    // SHOW ORDER DETAIL
+    function showDetail(id) {
+      const order = allOrders.find(o => o.id === id);
+      if (!order) return;
+
+      selectedOrderId = id;
+      const panel = document.getElementById('detail-panel');
+      panel.classList.remove('hidden');
+
+      const statusIdx = STATUS_OPTIONS.indexOf(order.status);
+      const progress = ((statusIdx + 1) / STATUS_OPTIONS.length) * 100;
+
+      const steps = [
+        { label: 'Order Received', status: 'done' },
+        { label: 'Hilt Forging', status: statusIdx >= 1 ? (order.status === 'forging' ? 'active' : 'done') : 'pending' },
+        { label: 'Kyber Core Tuning', status: statusIdx >= 2 ? (order.status === 'tuning' ? 'active' : 'done') : 'pending' },
+        { label: 'Quality Test', status: statusIdx >= 3 ? (order.status === 'test' ? 'active' : 'done') : 'pending' },
+        { label: 'Starport Shipping', status: statusIdx >= 4 ? (order.status === 'ship' ? 'active' : 'done') : 'pending' }
+      ];
+
+      const timelineHTML = steps.map((s, i) => {
+        const dotClass = s.status === 'done' ? 'bg-green-400' : s.status === 'active' ? 'bg-neon-cyan animate-pulse' : 'bg-gray-600';
+        const textClass = s.status === 'done' ? 'text-green-400' : s.status === 'active' ? 'text-neon-cyan' : 'text-gray-500';
+        const icon = s.status === 'done'
+          ? '<svg class="w-3.5 h-3.5 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>'
+          : s.status === 'active'
+          ? '<svg class="w-2.5 h-2.5 text-neon-cyan animate-spin ml-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20"/></svg>'
+          : '';
+        const statusText = s.status === 'done' ? '<p class="text-[0.4rem] text-green-500/60 tracking-wider mt-0.5">[DONE]</p>'
+          : s.status === 'active' ? '<p class="text-[0.4rem] text-cyan-500/60 tracking-wider mt-0.5">[IN PROGRESS]</p>' : '';
+
+        return `<div class="timeline-step ${s.status === 'done' ? 'done' : s.status === 'active' ? 'active' : ''}">
+          <div class="timeline-dot ${dotClass}"></div>
+          <div class="flex items-center gap-2">
+            <span class="text-[0.6rem] ${textClass}">0${i+1} ${s.label}</span>
+            ${icon}
+          </div>
+          ${statusText}
+        </div>`;
+      }).join('');
+
+      document.getElementById('detail-content').innerHTML = `
+        <div class="mb-3">
+          <span class="text-neon-cyan font-display text-sm tracking-wider">#${order.order_code}</span>
+        </div>
+        <div class="progress-track mb-4">
+          <div class="progress-fill" style="width: ${progress}%"></div>
+        </div>
+        <div class="flex flex-col gap-2 mb-4 text-[0.6rem]">
+          <div class="flex justify-between">
+            <span class="text-gray-500">Client:</span>
+            <span class="text-gray-300">${order.customer_name || 'N/A'}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">Email:</span>
+            <span class="text-gray-300">${order.customer_email || 'N/A'}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">Sleeve:</span>
+            <span class="text-neon-cyan">${SLEEVE_NAMES[order.sleeve] || order.sleeve}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">Crystal:</span>
+            <span class="text-neon-cyan">${CRYSTAL_NAMES[order.crystal] || order.crystal}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">Sector:</span>
+            <span class="text-gray-300">${order.sector_planet || 'N/A'}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-500">Created:</span>
+            <span class="text-gray-300">${new Date(order.created_at).toLocaleDateString()}</span>
+          </div>
+        </div>
+        <div class="flex flex-col gap-3">
+          <p class="text-[0.5rem] text-cyan-400/60 tracking-widest">PROGRESS</p>
+          <div class="flex flex-col gap-2.5">
+            ${timelineHTML}
+          </div>
+        </div>
+      `;
+    }
+
+    // CLOSE DETAIL
+    document.getElementById('btn-close-detail').addEventListener('click', () => {
+      document.getElementById('detail-panel').classList.add('hidden');
+      selectedOrderId = null;
+    });
+
+    // SEARCH
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      const filtered = allOrders.filter(o =>
+        (o.order_code && o.order_code.toLowerCase().includes(q)) ||
+        (o.customer_name && o.customer_name.toLowerCase().includes(q)) ||
+        (o.customer_email && o.customer_email.toLowerCase().includes(q))
+      );
+      renderTable(filtered);
+    });
+
+    // REFRESH
+    document.getElementById('btn-refresh').addEventListener('click', loadOrders);
+  </script>
 </body>
 </html>

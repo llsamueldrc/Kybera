@@ -25,7 +25,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@23/dist/tween.umd.js"></script>
   <script type="importmap">
   {
     "imports": {
@@ -60,28 +59,30 @@
   <!-- UI PANELS -->
   <div class="fixed inset-0 w-screen h-screen z-10 pointer-events-none">
 
-    <!-- Center Top: Status + Power Toggle -->
-    <div class="absolute top-20 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 animate-fade-in pointer-events-auto">
+    <!-- Center Bottom: Actions + Status -->
+    <div class="fixed bottom-8 left-0 right-0 z-30 flex flex-col items-center gap-3 pointer-events-auto">
+      <div class="flex justify-center gap-4">
+        <button id="btn-power" class="btn-ensamblar">
+          <span class="flex items-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/>
+            </svg>
+            <span id="power-label">FINISH & ENSAMBLAR</span>
+          </span>
+        </button>
+        <a href="/order" id="btn-complete-order" class="btn-complete-order inline-block" style="display:none;">
+          <span class="flex items-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            COMPLETE ORDER
+          </span>
+        </a>
+      </div>
       <div id="config-status" class="cyber-panel px-6 py-2 text-center">
         <p class="text-[0.65rem] text-gray-400 tracking-widest">COMPONENTS DETONATED.</p>
         <p class="text-[0.65rem] text-neon-cyan tracking-widest">SELECT MATERIALS & CRYSTAL.</p>
       </div>
-      <button id="btn-power" class="btn-ensamblar">
-        <span class="flex items-center gap-2">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/>
-          </svg>
-          <span id="power-label">FINISH & ENSAMBLAR</span>
-        </span>
-      </button>
-      <a href="/order" id="btn-complete-order" class="btn-complete-order inline-block" style="display:none;">
-        <span class="flex items-center gap-2">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          COMPLETE ORDER
-        </span>
-      </a>
     </div>
 
     <!-- Left Panel: Hilt Sleeve -->
@@ -162,15 +163,6 @@
             <span class="text-[0.6rem] text-gray-400 tracking-wider">Red</span>
           </div>
           <div class="flex flex-col items-center gap-2">
-            <button class="crystal-thumb" data-crystal="black">
-              <svg class="w-8 h-8" viewBox="0 0 24 24" fill="#222222" filter="drop-shadow(0 0 6px #444444)">
-                <polygon points="12,2 20,10 12,22 4,10" opacity="0.9"/>
-                <polygon points="12,2 16,6 12,22 8,6" fill="#555555" opacity="0.3"/>
-              </svg>
-            </button>
-            <span class="text-[0.6rem] text-gray-400 tracking-wider">Black</span>
-          </div>
-          <div class="flex flex-col items-center gap-2">
             <button class="crystal-thumb" data-crystal="yellow">
               <svg class="w-8 h-8" viewBox="0 0 24 24" fill="#ffcc00" filter="drop-shadow(0 0 6px #ffcc00)">
                 <polygon points="12,2 20,10 12,22 4,10" opacity="0.9"/>
@@ -194,6 +186,7 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script type="module" src="/js/configurator-page.js"></script>
 </body>
 </html>
