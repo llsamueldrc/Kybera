@@ -1,6 +1,6 @@
 """
 KYBERA — Python Server
-Routes: /, /configurator, /order, /gallery, /admin
+Routes: /, /configurator, /order, /tracker, /admin
 """
 
 from http.server import HTTPServer, SimpleHTTPRequestHandler
@@ -14,7 +14,7 @@ PAGES = {
     '/': 'pages/landing.html',
     '/configurator': 'pages/configurator.html',
     '/order': 'pages/order.html',
-    '/gallery': 'pages/gallery.html',
+    '/tracker': 'pages/tracker.html',
     '/admin': 'pages/admin.html',
 }
 
@@ -42,3 +42,4 @@ if __name__ == '__main__':
     print()
     server = HTTPServer(('0.0.0.0', PORT), KyberaHandler)
     server.serve_forever()
+
