@@ -84,7 +84,11 @@ rimLight.position.set(0, -1, 2);
 scene.add(rimLight);
 
 
-const composer = new EffectComposer(renderer);
+const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
+  format: THREE.RGBAFormat,
+  type: THREE.UnsignedByteType
+});
+const composer = new EffectComposer(renderer, renderTarget);
 composer.addPass(new RenderPass(scene, camera));
 const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.8, 0.4, 0.85);
 composer.addPass(bloomPass);
