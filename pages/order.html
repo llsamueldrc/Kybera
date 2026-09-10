@@ -154,11 +154,38 @@
     </div>
   </div>
 
+  <!-- ORDER CONFIRMATION MODAL -->
+  <div id="order-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 hidden" style="pointer-events:auto;">
+    <div class="cyber-panel p-8 max-w-sm w-full text-center animate-fade-in">
+      <svg class="w-16 h-16 text-neon-cyan mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      <h2 class="font-display text-xl text-neon-cyan tracking-widest mb-2">GRACIAS POR TU COMPRA</h2>
+      <p class="text-gray-400 text-sm mb-4">Tu codigo de orden es:</p>
+      <div class="font-display text-3xl text-neon-cyan tracking-[0.2em] mb-4"
+           style="text-shadow: 0 0 20px rgba(0,255,255,0.5);">
+        <span id="modal-order-code">KYB-----</span>
+      </div>
+      <p class="text-[0.55rem] text-gray-500 mb-6">Guarda este codigo para rastrear tu pedido</p>
+      <button id="btn-close-modal" class="btn-cyber py-3 w-full">
+        <span class="text-[0.65rem] tracking-wider">CERRAR</span>
+      </button>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = 'https://bmfmckurecmrpfaudaxa.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtZm1ja3VyZWNtcnBmYXVkYXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5NzQzNDcsImV4cCI6MjEwNDU1MDM0N30.iWLNVzHpWf38PU2hak4O6H8PkhnNnzyx5nM9y-wkb0E';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let supabase = null;
+    try {
+      if (window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      }
+    } catch (e) {
+      console.warn('Supabase init failed:', e);
+    }
 
     const SLEEVE_NAMES = {
       brushedSteel: 'Brushed Steel',
@@ -167,23 +194,13 @@
     };
 
     const CRYSTAL_NAMES = {
-      blue: 'Blue',
-      green: 'Green',
-      purple: 'Purple',
-      white: 'White',
-      red: 'Red',
-      black: 'Black',
-      yellow: 'Yellow'
+      blue: 'Blue', green: 'Green', purple: 'Purple',
+      white: 'White', red: 'Red', black: 'Black', yellow: 'Yellow'
     };
 
     const CRYSTAL_HEX = {
-      blue: '#00ccff',
-      green: '#00ff66',
-      purple: '#ee66ff',
-      white: '#ffffff',
-      red: '#ff4444',
-      black: '#333333',
-      yellow: '#ffcc00'
+      blue: '#00ccff', green: '#00ff66', purple: '#ee66ff',
+      white: '#ffffff', red: '#ff4444', black: '#333333', yellow: '#ffcc00'
     };
 
     function generateOrderCode() {
@@ -191,6 +208,11 @@
       const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
       const letter = letters[Math.floor(Math.random() * 26)];
       return 'KYB-' + nums + '-' + letter;
+    }
+
+    function showOrderModal(code) {
+      document.getElementById('modal-order-code').textContent = code;
+      document.getElementById('order-modal').classList.remove('hidden');
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -234,24 +256,34 @@
         status: 'forging'
       };
 
-      try {
-        const { data, error } = await supabase
-          .from('orders')
-          .insert(orderData)
-          .select('order_code')
-          .single();
+      let finalCode = orderData.order_code;
 
-        if (error) throw error;
+      if (supabase) {
+        try {
+          const { data, error } = await supabase
+            .from('orders')
+            .insert(orderData)
+            .select('order_code')
+            .single();
 
-        localStorage.setItem('kybera_last_order', data.order_code);
-        localStorage.removeItem('kybera_config');
-        window.location.href = '/gallery?code=' + data.order_code;
-      } catch (err) {
-        console.error('Order error:', err);
-        localStorage.setItem('kybera_last_order', orderData.order_code);
-        localStorage.removeItem('kybera_config');
-        window.location.href = '/gallery?code=' + orderData.order_code;
+          if (!error && data) {
+            finalCode = data.order_code;
+          }
+        } catch (err) {
+          console.warn('Supabase insert failed:', err);
+        }
       }
+
+      localStorage.setItem('kybera_last_order', finalCode);
+      localStorage.removeItem('kybera_config');
+      showOrderModal(finalCode);
+      btn.disabled = false;
+      btn.innerHTML = '<span class="flex items-center justify-center gap-2"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> CONFIRM ACQUISITION & PROCESS PAYMENT</span>';
+    });
+
+    document.getElementById('btn-close-modal').addEventListener('click', () => {
+      document.getElementById('order-modal').classList.add('hidden');
+      window.location.href = '/';
     });
   </script>
 </body>
