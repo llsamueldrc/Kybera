@@ -50,7 +50,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.minDistance = 3;
-controls.maxDistance = 15;
+controls.maxDistance = 30;
 controls.target.set(0, 1.5, 0);
 controls.minPolarAngle = 0.1;
 controls.maxPolarAngle = Math.PI;
