@@ -248,10 +248,9 @@
         window.location.href = '/gallery?code=' + data.order_code;
       } catch (err) {
         console.error('Order error:', err);
-        btn.disabled = false;
-        btn.innerHTML = '<span class="flex items-center justify-center gap-2"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> CONFIRM ACQUISITION & PROCESS PAYMENT</span>';
-        errorEl.textContent = 'Error processing order. Please try again.';
-        errorEl.classList.remove('hidden');
+        localStorage.setItem('kybera_last_order', orderData.order_code);
+        localStorage.removeItem('kybera_config');
+        window.location.href = '/gallery?code=' + orderData.order_code;
       }
     });
   </script>
