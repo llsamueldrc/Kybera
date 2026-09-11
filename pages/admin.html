@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>KYBERA — Admin Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -82,13 +82,12 @@
           <span class="text-[0.65rem] tracking-wider">AUTENTICAR</span>
         </button>
         <p id="login-error" class="text-red-400 text-[0.6rem] hidden">CÓDIGO DE ACCESO INVÁLIDO</p>
-        <p id="login-supabase-status" class="text-amber-400 text-[0.55rem] hidden">Verificando conexión con la base de datos...</p>
       </form>
     </div>
   </div>
 
   <!-- DASHBOARD (hidden until login) -->
-  <div id="dashboard" class="fixed inset-0 z-10 pointer-events-auto overflow-y-auto hidden"
+<div id="dashboard" class="page-scroll fixed inset-0 z-10 pointer-events-auto overflow-y-auto hidden"
        style="padding: 5vh 4vw 3vh 4vw;">
     <div class="flex flex-col lg:flex-row gap-5 max-w-6xl mx-auto h-full animate-fade-in">
 
@@ -278,12 +277,13 @@
   </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/supabase-config.js"></script>
     <script>
-      const ADMIN_PASSWORD = 'kybera2024';
-      const SUPABASE_URL = 'https://bmfmckurecmrpfaudaxa.supabase.co';
-      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtZm1ja3VyZWNtcnBmYXVkYXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5NzQzNDcsImV4cCI6MjEwNDU1MDM0N30.iWLNVzHpWf38PU2hak4O6H8PkhnNnzyx5nM9y-wkb0E';
+      const SUPABASE_URL = window.KYBERA_SUPABASE.url;
+      const SUPABASE_KEY = window.KYBERA_SUPABASE.anonKey;
+      const ADMIN_API = '/api/admin/data';
+      let adminToken = sessionStorage.getItem('kybera_admin_token') || '';
       let supabaseClient = null;
-      let supabaseConnected = false;
       let realtimeChannel = null;
       let realtimeRetryInterval = null;
 
@@ -303,42 +303,44 @@
         try {
           if (window.supabase) {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            updateConnectionStatus(false, 'Verificando conexión...');
-            testConnection();
           } else {
-            updateConnectionStatus(false, 'SDK de Supabase no cargado');
+            console.warn('Supabase SDK no cargado');
           }
         } catch (e) {
           console.error('Supabase init failed:', e);
-          updateConnectionStatus(false, 'Fallo de inicialización');
         }
       }
 
-      async function testConnection() {
-        if (!supabaseClient) return;
+      async function apiAction(action, payload = {}) {
         try {
-          const { data, error } = await supabaseClient.from('orders').select('*').limit(1);
-          if (!error) {
-            supabaseConnected = true;
-            updateConnectionStatus(true, 'Conectado');
-            if (realtimeRetryInterval) { clearInterval(realtimeRetryInterval); realtimeRetryInterval = null; }
-            subscribeRealtime();
-          } else {
-            throw error;
+          const res = await fetch(ADMIN_API, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + adminToken
+            },
+            body: JSON.stringify({ action, ...payload })
+          });
+          const json = await res.json().catch(() => ({}));
+          if (res.status === 401) {
+            adminToken = '';
+            sessionStorage.removeItem('kybera_admin_token');
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            return { error: 'no_auth' };
           }
+          return json;
         } catch (e) {
-          console.error('Supabase connection test failed:', e);
-          supabaseConnected = false;
-          updateConnectionStatus(false, 'Conexión fallida - reintentando...');
-          scheduleReconnection();
+          console.error('Admin API call failed:', e);
+          return { error: 'network' };
         }
       }
 
       function scheduleReconnection() {
         if (realtimeRetryInterval) return;
         realtimeRetryInterval = setInterval(() => {
-          console.log('Retrying Supabase connection...');
-          testConnection();
+          console.log('Reintentando conexión realtime...');
+          subscribeRealtime();
         }, 5000);
       }
 
@@ -376,24 +378,34 @@
         e.preventDefault();
         const pw = document.getElementById('login-password').value;
         const errorEl = document.getElementById('login-error');
-        const supabaseStatusEl = document.getElementById('login-supabase-status');
         errorEl.classList.add('hidden');
 
-        if (pw === ADMIN_PASSWORD) {
-          sessionStorage.setItem('kybera_admin', 'true');
-          document.getElementById('login-screen').classList.add('hidden');
-          document.getElementById('dashboard').classList.remove('hidden');
-          updateConnectionStatus(false, 'Cargando panel...');
-          await loadOrders();
-          subscribeRealtime();
-          setInterval(loadOrders, 30000);
-        } else {
+        try {
+          const res = await fetch('/api/admin/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: pw })
+          });
+          const json = await res.json().catch(() => ({}));
+          if (res.ok && json.token) {
+            adminToken = json.token;
+            sessionStorage.setItem('kybera_admin_token', adminToken);
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            updateConnectionStatus(false, 'Cargando panel...');
+            await loadOrders();
+            subscribeRealtime();
+            setInterval(loadOrders, 30000);
+          } else {
+            errorEl.classList.remove('hidden');
+          }
+        } catch (err) {
           errorEl.classList.remove('hidden');
         }
       });
 
       // Auto-login if session exists
-      if (sessionStorage.getItem('kybera_admin') === 'true') {
+      if (adminToken) {
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('dashboard').classList.remove('hidden');
         updateConnectionStatus(false, 'Cargando panel...');
@@ -410,44 +422,27 @@
       // INIT SUPABASE ON PAGE LOAD
       initSupabase();
 
-      // LOAD ORDERS
+// LOAD ORDERS
       async function loadOrders() {
-        if (!supabaseClient || !supabaseConnected) {
-          console.warn('Supabase not connected, attempting...');
-          await testConnection();
-          if (!supabaseClient || !supabaseConnected) {
+        const res = await apiAction('load_orders');
+        if (res.error) {
+          updateConnectionStatus(false, 'Fallo de conexión');
+          if (res.error === 'network') {
             document.getElementById('orders-tbody').innerHTML =
               '<tr><td colspan="6" class="text-center text-yellow-400 py-4">Fallo de conexión con la base de datos. Reintentando...</td></tr>';
-            return;
           }
+          return;
         }
 
-        try {
-          const { data, error } = await supabaseClient
-            .from('orders')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-          if (error) {
-            console.error('Load error:', error);
-            document.getElementById('orders-tbody').innerHTML =
-              '<tr><td colspan="6" class="text-center text-red-400 py-4">Error al cargar pedidos</td></tr>';
-            return;
-          }
-
-          allOrders = data || [];
-          newOrdersCount = 0;
-          const badge = document.getElementById('new-orders-badge');
-          if (badge) badge.style.display = 'none';
-          const syncTimeEl = document.getElementById('sync-time');
-          if (syncTimeEl) syncTimeEl.textContent = new Date().toLocaleTimeString();
-          renderStats();
-          renderTable(allOrders);
-        } catch (err) {
-          console.error('Load orders exception:', err);
-          document.getElementById('orders-tbody').innerHTML =
-            '<tr><td colspan="6" class="text-center text-red-400 py-4">Error de conexión</td></tr>';
-        }
+        updateConnectionStatus(true, 'Conectado');
+        allOrders = res.data || [];
+        newOrdersCount = 0;
+        const badge = document.getElementById('new-orders-badge');
+        if (badge) badge.style.display = 'none';
+        const syncTimeEl = document.getElementById('sync-time');
+        if (syncTimeEl) syncTimeEl.textContent = new Date().toLocaleTimeString();
+        renderStats();
+        renderTable(allOrders);
       }
 
       // RENDER STATS
@@ -521,24 +516,13 @@
             const id = e.target.dataset.id;
             const newStatus = e.target.value;
             try {
-              if (!supabaseClient || !supabaseConnected) {
-                showToast('ERROR: Base de datos no conectada');
-                return;
-              }
-              const { error } = await supabaseClient.from('orders').update({ status: newStatus, updated_at: new Date().toISOString() }).eq('id', id);
-              if (error) {
-                console.error('Status update failed:', error);
+              const res = await apiAction('update_order_status', { id, status: newStatus });
+              if (res.error) {
+                console.error('Status update failed:', res.error);
                 showToast('ERROR: No se pudo actualizar el estado');
               } else {
                 showToast('Estado actualizado a ' + (STATUS_NAMES[newStatus] || newStatus));
                 addActivity('Pedido actualizado a ' + (STATUS_NAMES[newStatus] || newStatus));
-                try {
-                  await supabaseClient.from('order_status_history').insert({
-                    order_id: id, status: newStatus, note: 'Actualizado desde panel', changed_at: new Date().toISOString()
-                  });
-                } catch (err) {
-                  console.warn('History insert failed:', err);
-                }
               }
             } catch (err) {
               console.error('Status update error:', err);
@@ -563,13 +547,9 @@
             if (!order) return;
             if (!confirm('¿Eliminar pedido #' + (order.order_code || 'desconocido') + '?')) return;
             try {
-              if (!supabaseClient || !supabaseConnected) {
-                showToast('ERROR: Base de datos no conectada');
-                return;
-              }
-              const { error } = await supabaseClient.from('orders').delete().eq('id', id);
-              if (error) {
-                console.error('Delete failed:', error);
+              const res = await apiAction('delete_order', { id });
+              if (res.error) {
+                console.error('Delete failed:', res.error);
                 showToast('ERROR: No se pudo eliminar el pedido');
               } else {
                 showToast('Pedido #' + (order.order_code || 'desconocido') + ' eliminado');
@@ -599,15 +579,9 @@
         // Leer el timeline real de la base de datos (order_status_history)
         const historyByStatus = {};
         try {
-          if (supabaseClient) {
-            const { data: history } = await supabaseClient
-              .from('order_status_history')
-              .select('status,changed_at')
-              .eq('order_id', id)
-              .order('changed_at', { ascending: true });
-            if (history) {
-              history.forEach(h => { if (!historyByStatus[h.status]) historyByStatus[h.status] = h.changed_at; });
-            }
+          const res = await apiAction('load_history', { id });
+          if (!res.error && res.data) {
+            res.data.forEach(h => { if (!historyByStatus[h.status]) historyByStatus[h.status] = h.changed_at; });
           }
         } catch (e) {
           console.warn('History fetch failed:', e);
@@ -740,18 +714,13 @@
       // LOAD CLIENTES
       async function loadProfiles() {
         const tbody = document.getElementById('profiles-tbody');
-        if (!supabaseClient || !supabaseConnected) {
-          tbody.innerHTML = '<tr><td colspan="6" class="text-center text-yellow-400 py-4">Fallo de conexión con la base de datos</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-500 py-4">Cargando clientes...</td></tr>';
+        const res = await apiAction('load_profiles');
+        if (res.error) {
+          tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-400 py-4">Error al cargar clientes</td></tr>';
           return;
         }
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-500 py-4">Cargando clientes...</td></tr>';
-        try {
-          const { data, error } = await supabaseClient
-            .from('customer_profiles')
-            .select('*')
-            .order('total_orders', { ascending: false });
-          if (error) throw error;
-          tbody.innerHTML = (data || []).map(p => `
+        tbody.innerHTML = (res.data || []).map(p => `
             <tr>
               <td class="text-gray-300">${p.full_name || 'N/A'}</td>
               <td>${p.email || 'N/A'}</td>
@@ -760,32 +729,23 @@
               <td class="text-neon-cyan">${p.total_orders}</td>
               <td class="text-gray-500">${p.last_order_at ? new Date(p.last_order_at).toLocaleString() : 'N/A'}</td>
             </tr>`).join('') || '<tr><td colspan="6" class="text-center text-gray-500 py-4">No hay clientes aún</td></tr>';
-        } catch (err) {
-          console.error('Load profiles error:', err);
-          tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-400 py-4">Error al cargar clientes</td></tr>';
-        }
       }
 
       // LOAD RESEÑAS
       async function loadReviews() {
         const tbody = document.getElementById('reviews-tbody');
-        if (!supabaseClient || !supabaseConnected) {
-          tbody.innerHTML = '<tr><td colspan="5" class="text-center text-yellow-400 py-4">Fallo de conexión con la base de datos</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-500 py-4">Cargando reseñas...</td></tr>';
+        const res = await apiAction('load_reviews');
+        if (res.error) {
+          tbody.innerHTML = '<tr><td colspan="5" class="text-center text-red-400 py-4">Error al cargar reseñas</td></tr>';
           return;
         }
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-500 py-4">Cargando reseñas...</td></tr>';
-        try {
-          const { data, error } = await supabaseClient
-            .from('reviews')
-            .select('*')
-            .order('created_at', { ascending: false });
-          if (error) throw error;
-          tbody.innerHTML = (data || []).map(r => {
-            const stars = Math.max(1, Math.min(5, Math.round(Number(r.rating) || 5)));
-            const action = r.approved
-              ? '<button class="review-toggle text-[0.5rem] text-yellow-400/80 hover:text-yellow-400 tracking-wider" data-id="' + r.id + '">OCULTAR</button>'
-              : '<button class="review-toggle text-[0.5rem] text-green-400/80 hover:text-green-400 tracking-wider" data-id="' + r.id + '">APROBAR</button>';
-            return `<tr>
+        tbody.innerHTML = (res.data || []).map(r => {
+          const stars = Math.max(1, Math.min(5, Math.round(Number(r.rating) || 5)));
+          const action = r.approved
+            ? '<button class="review-toggle text-[0.5rem] text-yellow-400/80 hover:text-yellow-400 tracking-wider" data-id="' + r.id + '" data-approved="0">OCULTAR</button>'
+            : '<button class="review-toggle text-[0.5rem] text-green-400/80 hover:text-green-400 tracking-wider" data-id="' + r.id + '" data-approved="1">APROBAR</button>';
+          return `<tr>
               <td class="text-gray-300">${r.customer_name || 'N/A'} <span class="text-[0.45rem] ${r.approved ? 'text-green-500/60' : 'text-gray-600'}">[${r.approved ? 'PUBLICADA' : 'OCULTA'}]</span></td>
               <td class="${r.approved ? 'text-yellow-400' : 'text-gray-600'}">${'★'.repeat(stars)}${'☆'.repeat(5 - stars)}</td>
               <td class="text-gray-400">${r.comment || '-'}</td>
@@ -795,19 +755,17 @@
                 <button class="review-del text-[0.5rem] text-red-400/70 hover:text-red-400 tracking-wider ml-2" data-id="${r.id}">ELIMINAR</button>
               </td>
             </tr>`;
-          }).join('') || '<tr><td colspan="5" class="text-center text-gray-500 py-4">No hay reseñas</td></tr>';
+        }).join('') || '<tr><td colspan="5" class="text-center text-gray-500 py-4">No hay reseñas</td></tr>';
 
           tbody.querySelectorAll('.review-toggle').forEach(btn => {
             btn.addEventListener('click', async (e) => {
               const rid = e.target.dataset.id;
-              const approved = e.target.textContent.trim() === 'APROBAR';
-              try {
-                const { error } = await supabaseClient.from('reviews').update({ approved }).eq('id', rid);
-                if (error) throw error;
-                showToast('Reseña ' + (approved ? 'aprobada' : 'ocultada'));
-              } catch (err) {
-                console.error('Review toggle error:', err);
+              const approved = e.target.dataset.approved === '1';
+              const res2 = await apiAction('toggle_review', { id: rid, approved });
+              if (res2.error) {
                 showToast('ERROR: Fallo de conexión');
+              } else {
+                showToast('Reseña ' + (approved ? 'aprobada' : 'ocultada'));
               }
               loadReviews();
             });
@@ -815,38 +773,27 @@
           tbody.querySelectorAll('.review-del').forEach(btn => {
             btn.addEventListener('click', async (e) => {
               if (!confirm('¿Eliminar esta reseña?')) return;
-              try {
-                const { error } = await supabaseClient.from('reviews').delete().eq('id', e.target.dataset.id);
-                if (error) throw error;
-                showToast('Reseña eliminada');
-              } catch (err) {
-                console.error('Review delete error:', err);
+              const res2 = await apiAction('delete_review', { id: e.target.dataset.id });
+              if (res2.error) {
                 showToast('ERROR: Fallo de conexión');
+              } else {
+                showToast('Reseña eliminada');
               }
               loadReviews();
             });
           });
-        } catch (err) {
-          console.error('Load reviews error:', err);
-          tbody.innerHTML = '<tr><td colspan="5" class="text-center text-red-400 py-4">Error al cargar reseñas</td></tr>';
-        }
       }
 
       // LOAD MENSAJES
       async function loadMessages() {
         const tbody = document.getElementById('messages-tbody');
-        if (!supabaseClient || !supabaseConnected) {
-          tbody.innerHTML = '<tr><td colspan="5" class="text-center text-yellow-400 py-4">Fallo de conexión con la base de datos</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-500 py-4">Cargando mensajes...</td></tr>';
+        const res = await apiAction('load_messages');
+        if (res.error) {
+          tbody.innerHTML = '<tr><td colspan="5" class="text-center text-red-400 py-4">Error al cargar mensajes</td></tr>';
           return;
         }
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-gray-500 py-4">Cargando mensajes...</td></tr>';
-        try {
-          const { data, error } = await supabaseClient
-            .from('contact_messages')
-            .select('*')
-            .order('created_at', { ascending: false });
-          if (error) throw error;
-          tbody.innerHTML = (data || []).map(m => `
+        tbody.innerHTML = (res.data || []).map(m => `
             <tr>
               <td class="text-gray-300">${m.name || 'N/A'}</td>
               <td>${m.email || 'N/A'}</td>
@@ -854,10 +801,6 @@
               <td class="text-gray-400">${m.message || '-'}</td>
               <td class="text-gray-500 whitespace-nowrap">${m.created_at ? new Date(m.created_at).toLocaleString() : 'N/A'}</td>
             </tr>`).join('') || '<tr><td colspan="5" class="text-center text-gray-500 py-4">No hay mensajes</td></tr>';
-        } catch (err) {
-          console.error('Load messages error:', err);
-          tbody.innerHTML = '<tr><td colspan="5" class="text-center text-red-400 py-4">Error al cargar mensajes</td></tr>';
-        }
       }
 
       // TOAST NOTIFICATION
@@ -943,7 +886,7 @@ try {
       // LOGOUT
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !document.getElementById('login-screen').classList.contains('hidden')) {
-          sessionStorage.removeItem('kybera_admin');
+          sessionStorage.removeItem('kybera_admin_token');
         }
       });
     </script>

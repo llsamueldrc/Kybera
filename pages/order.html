@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>KYBERA — Order</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -192,20 +192,7 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = 'https://bmfmckurecmrpfaudaxa.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtZm1ja3VyZWNtcnBmYXVkYXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5NzQzNDcsImV4cCI6MjEwNDU1MDM0N30.iWLNVzHpWf38PU2hak4O6H8PkhnNnzyx5nM9y-wkb0E';
-
-let supabaseClient = null;
-      try {
-        if (window.supabase) {
-          supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        }
-      } catch (e) {
-        console.warn('Supabase init failed:', e);
-      }
-
+<script>
 const SLEEVE_NAMES = {
       brushedSteel: 'Acero Cepillado',
       darkBronzed: 'Bronce Oscuro',
@@ -323,77 +310,25 @@ const orderData = {
 
 let finalCode = orderData.order_code;
       let supabaseOk = false;
-      let insertedOrderId = null;
 
-      if (supabaseClient) {
-        try {
-          const { data, error } = await supabaseClient
-            .from('orders')
-            .insert(orderData)
-            .select('id, order_code')
-            .single();
-
-          if (!error && data) {
-            finalCode = data.order_code || finalCode;
-            insertedOrderId = data.id || null;
-            supabaseOk = true;
-          } else {
-            console.warn('Supabase insert error:', error);
-          }
-        } catch (err) {
-          console.warn('Supabase insert failed:', err);
+      try {
+        const res = await fetch('/api/order/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+        const json = await res.json().catch(() => ({}));
+        if (res.ok && json.ok && json.order_code) {
+          finalCode = json.order_code;
+          supabaseOk = true;
+        } else {
+          console.warn('Order submit error:', json.error || res.status);
         }
-      } else {
-        console.warn('Supabase client not available');
+      } catch (err) {
+        console.warn('Order submit failed:', err);
       }
 
       if (supabaseOk) {
-        // Timeline inicial del pedido (forja/recepción)
-        if (insertedOrderId) {
-          try {
-            await supabaseClient.from('order_status_history').insert({
-              order_id: insertedOrderId,
-              status: 'forging',
-              note: 'Pedido creado por el cliente',
-              changed_at: new Date().toISOString()
-            });
-          } catch (err) {
-            console.warn('History init failed:', err);
-          }
-        }
-
-        // Actualizar/crear el perfil del cliente
-        try {
-          const { data: existing } = await supabaseClient
-            .from('customer_profiles')
-            .select('id, total_orders')
-            .eq('email', orderData.customer_email)
-            .maybeSingle();
-          if (existing && existing.id) {
-            await supabaseClient.from('customer_profiles')
-              .update({
-                full_name: orderData.customer_name,
-                doc_id: orderData.customer_id,
-                country: orderData.sector_planet,
-                total_orders: (existing.total_orders || 0) + 1,
-                last_order_at: new Date().toISOString()
-              })
-              .eq('id', existing.id);
-          } else {
-            await supabaseClient.from('customer_profiles')
-              .insert({
-                email: orderData.customer_email,
-                full_name: orderData.customer_name,
-                doc_id: orderData.customer_id,
-                country: orderData.sector_planet,
-                total_orders: 1,
-                last_order_at: new Date().toISOString()
-              });
-          }
-        } catch (err) {
-          console.warn('Customer profile upsert failed:', err);
-        }
-
         localStorage.setItem('kybera_last_order', finalCode);
         localStorage.removeItem('kybera_config');
         showOrderModal(finalCode);

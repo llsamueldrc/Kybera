@@ -1,3 +1,6 @@
-models/Referencias/
 config/
+.env
+.env.*
+models/Referencias/
+node_modules/
 *.db

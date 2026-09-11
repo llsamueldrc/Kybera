@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>KYBERA — Tracker</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -64,7 +64,7 @@
   </nav>
 
   <!-- CONTENT: Two panels with gap -->
-  <div class="fixed inset-0 w-screen h-screen z-10 pointer-events-auto overflow-y-auto"
+  <div class="page-scroll fixed inset-0 w-screen h-screen z-10 pointer-events-auto overflow-y-auto"
        style="padding: 5rem 3rem 2rem;">
     <div class="flex flex-col lg:flex-row lg:items-start gap-8 w-full max-w-[1600px] mx-auto lg:justify-between animate-fade-in">
 
@@ -151,6 +151,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/supabase-config.js"></script>
   <script>
 const CRYSTAL_NAMES = {
   blue: 'Azul', green: 'Verde', purple: 'Violeta',
@@ -183,8 +184,8 @@ const CRYSTAL_HEX = {
     let REVIEWS_DB = null;
     let activeFilter = 'all';
 
-    const SUPABASE_URL = 'https://bmfmckurecmrpfaudaxa.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtZm1ja3VyZWNtcnBmYXVkYXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5NzQzNDcsImV4cCI6MjEwNDU1MDM0N30.iWLNVzHpWf38PU2hak4O6H8PkhnNnzyx5nM9y-wkb0E';
+    const SUPABASE_URL = window.KYBERA_SUPABASE.url;
+    const SUPABASE_KEY = window.KYBERA_SUPABASE.anonKey;
     let supabaseClient = null;
     try {
       if (window.supabase) supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);

@@ -76,14 +76,45 @@ const saberSound = new Audio('/models/Sonido sable/light-saber.mp3');
    RENDERER + SCENE + CAMERA
    ══════════════════════════════════════════════════════════════ */
 const container = document.getElementById('canvas-container');
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+
+// Móvil: menor pixel ratio + bloom más suave para que cargue fluido.
+// Desktop: conserva la máxima calidad.
+const IS_MOBILE = window.matchMedia('(max-width: 767px)').matches || (navigator.maxTouchPoints > 0);
+const PIXEL_RATIO = Math.min(window.devicePixelRatio || 1, IS_MOBILE ? 1 : 2);
+
+function showWebGLError(msg) {
+  const el = document.getElementById('webgl-error');
+  if (el) {
+    el.style.display = 'flex';
+    const p = el.querySelector('p.text-gray-400');
+    if (p && msg) p.textContent = msg;
+  }
+}
+
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+} catch (e) {
+  console.error('WebGL init failed:', e);
+  showWebGLError('Tu navegador no pudo iniciar WebGL (necesario para el 3D). Actualiza el navegador o prueba desde otro dispositivo.');
+  throw e;
+}
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setPixelRatio(PIXEL_RATIO);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 2.0;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.setClearColor(0x000000, 0);
 container.appendChild(renderer.domElement);
+
+renderer.domElement.addEventListener('webglcontextlost', (e) => {
+  e.preventDefault();
+  showWebGLError('La gráfica se reinició (contexto WebGL perdido). Recarga la página.');
+});
+renderer.domElement.addEventListener('webglcontextrestored', () => {
+  const el = document.getElementById('webgl-error');
+  if (el) el.style.display = 'none';
+});
 
 const scene = new THREE.Scene();
 new THREE.TextureLoader().load('/models/wallpapers/capa 1,2,3.jpeg', (tex) => {
@@ -158,7 +189,7 @@ const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.inner
 });
 const composer = new EffectComposer(renderer, renderTarget);
 composer.addPass(new RenderPass(scene, camera));
-const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 2.0, 0.8, 0.4);
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), IS_MOBILE ? 1.2 : 2.0, 0.8, 0.4);
 composer.addPass(bloomPass);
 composer.addPass(new OutputPass());
 
@@ -949,12 +980,21 @@ animate();
 /* ══════════════════════════════════════════════════════════════
    RESIZE
    ══════════════════════════════════════════════════════════════ */
-window.addEventListener('resize', () => {
+function resize() {
+  const pr = Math.min(window.devicePixelRatio || 1, IS_MOBILE ? 1 : 2);
+  renderer.setPixelRatio(pr);
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
   composer.setSize(window.innerWidth, window.innerHeight);
-});
+}
+window.addEventListener('resize', resize);
+window.addEventListener('orientationchange', () => setTimeout(resize, 250));
+
+if (IS_MOBILE) {
+  const hint = document.getElementById('drag-hint-text');
+  if (hint) hint.textContent = 'ARRASTRA PARA ROTAR • PINZA PARA ACERCAR';
+}
 
 /* --------------------------------------------------------------
    ORDER: Save config to localStorage before navigating

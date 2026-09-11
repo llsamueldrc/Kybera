@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>KYBERA — Configurador</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -25,6 +25,71 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .mobile-tab {
+      flex: 1;
+      background: transparent;
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      color: #666;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.25rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .mobile-tab.active {
+      border-color: #00ffff;
+      color: #00ffff;
+      background: rgba(0, 255, 255, 0.08);
+    }
+    .mobile-options {
+      display: flex;
+      gap: 0.75rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 0.2rem;
+    }
+    .mobile-options::-webkit-scrollbar {
+      display: none;
+    }
+    .mobile-options > * {
+      flex-shrink: 0;
+    }
+    .mobile-option-label {
+      text-align: center;
+      font-size: 0.55rem;
+      color: #8a8a8a;
+      letter-spacing: 0.1em;
+      margin-top: 0.25rem;
+    }
+    #mobile-controls {
+      display: none;
+    }
+    @media (max-width: 767px) {
+      #mobile-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .js-mobile-panel {
+        display: none !important;
+      }
+      #actions-bar {
+        bottom: calc(150px + env(safe-area-inset-bottom, 0px)) !important;
+      }
+      /* El hint queda por debajo de la barra (lo releva la barra móvil) */
+      #drag-hint {
+        display: none !important;
+      }
+    }
+    @media (min-width: 768px) {
+      #mobile-controls {
+        display: none !important;
+      }
+    }
+  </style>
   <script type="importmap">
   {
     "imports": {
@@ -59,8 +124,8 @@
   <!-- UI PANELS -->
   <div class="fixed inset-0 w-screen h-screen z-10 pointer-events-none">
 
-    <!-- Center Bottom: Actions + Status -->
-    <div class="fixed bottom-8 left-0 right-0 z-30 flex flex-col items-center gap-3 pointer-events-auto">
+<!-- Center Bottom: Actions + Status -->
+    <div id="actions-bar" class="fixed bottom-8 left-0 right-0 z-30 flex flex-col items-center gap-3 pointer-events-auto">
       <div class="flex justify-center gap-4">
         <button id="btn-power" class="btn-ensamblar">
           <span class="flex items-center gap-2">
@@ -85,8 +150,8 @@
       </div>
     </div>
 
-    <!-- Left Panel: Hilt Sleeve -->
-    <div class="absolute left-4 top-20 bottom-20 w-52 z-20 animate-slide-left pointer-events-auto" style="animation-delay: 0.1s;">
+<!-- Left Panel: Hilt Sleeve -->
+    <div class="js-mobile-panel absolute left-4 top-20 bottom-20 w-52 z-20 animate-slide-left pointer-events-auto" style="animation-delay: 0.1s;">
       <div class="cyber-panel p-5 h-full flex flex-col">
         <div class="panel-label">[ HILT SLEEVE COMPONENT ]</div>
         <div class="flex flex-col gap-4 flex-1">
@@ -107,13 +172,14 @@
           </div>
         </div>
         <div class="mt-4 pt-3 border-t border-cyan-500/10">
-          <p class="text-[0.55rem] text-gray-500 tracking-wider text-center">SELECT COMPONENT TO MODIFY</p>
+<p class="text-[0.55rem] text-gray-500 tracking-wider text-center">SELECT COMPONENT TO MODIFY</p>
+          </div>
         </div>
-      </div>
+    </div>
     </div>
 
-    <!-- Right Panel: Crystal -->
-    <div class="absolute right-4 top-20 bottom-20 w-52 z-20 animate-slide-right pointer-events-auto" style="animation-delay: 0.1s;">
+<!-- Right Panel: Crystal -->
+    <div class="js-mobile-panel absolute right-4 top-20 bottom-20 w-52 z-20 animate-slide-right pointer-events-auto" style="animation-delay: 0.1s;">
       <div class="cyber-panel-purple p-5 h-full flex flex-col">
         <div class="panel-label-purple">[ CORE KYBER CRYSTAL ]</div>
         <div class="grid grid-cols-2 gap-x-4 gap-y-6 flex-1 content-start">
@@ -177,14 +243,106 @@
         </div>
     </div>
 
-    <!-- Center Bottom: Status info -->
-    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 animate-fade-in pointer-events-auto" style="animation-delay: 0.3s;">
+<!-- Center Bottom: Status info -->
+    <div id="drag-hint" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 animate-fade-in pointer-events-auto" style="animation-delay: 0.3s;">
       <div class="text-center">
-        <p class="text-[0.5rem] text-gray-500 tracking-widest">DRAG TO ROTATE • SCROLL TO ZOOM</p>
+        <p id="drag-hint-text" class="text-[0.5rem] text-gray-500 tracking-widest">DRAG TO ROTATE • SCROLL TO ZOOM</p>
       </div>
     </div>
   </div>
 
+  <!-- MOBILE CONTROLS (solo pantallas pequeñas) -->
+  <div id="mobile-controls" class="fixed bottom-0 left-0 right-0 z-40 px-3 pt-2 pointer-events-auto">
+    <div class="cyber-panel flex gap-2 p-1 mb-1">
+      <button id="mob-tab-sleeve" type="button" class="mobile-tab active" data-mtab="sleeve">EMPUÑADURA</button>
+      <button id="mob-tab-crystal" type="button" class="mobile-tab" data-mtab="crystal">CRISTAL</button>
+    </div>
+    <div id="mob-options-sleeve" class="mobile-options">
+      <div class="flex flex-col items-center gap-1">
+        <button type="button" class="material-thumb selected" data-sleeve="brushedSteel"
+                style="background: repeating-linear-gradient(90deg, #aaa, #aaa 1px, #999 1px, #999 3px), linear-gradient(135deg, #aaaaaa, #888888);"></button>
+        <span class="mobile-option-label">Acero Cepillado</span>
+      </div>
+      <div class="flex flex-col items-center gap-1">
+        <button type="button" class="material-thumb" data-sleeve="darkBronzed"
+                style="background: repeating-linear-gradient(85deg, #8c5a2b, #8c5a2b 1px, #7a4e24 1px, #7a4e24 4px), linear-gradient(135deg, #8c5a2b, #6a4420);"></button>
+        <span class="mobile-option-label">Bronce Oscuro</span>
+      </div>
+      <div class="flex flex-col items-center gap-1">
+        <button type="button" class="material-thumb" data-sleeve="ancientStone"
+                style="background: repeating-linear-gradient(78deg, #444, #444 2px, #3a3a3a 2px, #3a3a3a 5px), linear-gradient(135deg, #444444, #222222);"></button>
+        <span class="mobile-option-label">Piedra Antigua</span>
+      </div>
+    </div>
+    <div id="mob-options-crystal" class="mobile-options" style="display:none;">
+      <div class="flex flex-col items-center gap-1">
+        <button type="button" class="crystal-thumb selected" data-crystal="blue">
+          <svg class="w-8 h-8" viewBox="0 0 24 24" fill="#0088ff" filter="drop-shadow(0 0 6px #0088ff)"><polygon points="12,2 20,10 12,22 4,10" opacity="0.9"/><polygon points="12,2 16,6 12,22 8,6" fill="white" opacity="0.3"/></svg>
+        </button>
+        <span class="mobile-option-label">Azul</span>
+      </div>
+      <div class="flex flex-col items-center gap-1">
+        <button type="button" class="crystal-thumb" data-crystal="green">
+          <svg class="w-8 h-8" viewBox="0 0 24 24" fill="#00ff66" filter="drop-shadow(0 0 6px #00ff66)"><polygon points="12,2 20,10 12,22 4,10" opacity="0.9"/><polygon points="12,2 16,6 12,22 8,6" fill="white" opacity="0.3"/></svg>
+        </button>
+        <span class="mobile-option-label">Verde</span>
+      </div>
+      <div class="flex flex-col items-center gap-1">
+        <button type="button" class="crystal-thumb" data-crystal="purple">
+          <svg class="w-8 h-8" viewBox="0 0 24 24" fill="#aa00ff" filter="drop-shadow(0 0 6px #aa00ff)"><polygon points="12,2 20,10 12,22 4,10" opacity="0.9"/><polygon points="12,2 16,6 12,22 8,6" fill="white" opacity="0.3"/></svg>
+        </button>
+        <span class="mobile-option-label">Violeta</span>
+      </div>
+      <div class="flex flex-col items-center gap-1">
+        <button type="button" class="crystal-thumb" data-crystal="white">
+          <svg class="w-8 h-8" viewBox="0 0 24 24" fill="#ffffff" filter="drop-shadow(0 0 6px #ffffff)"><polygon points="12,2 20,10 12,22 4,10" opacity="0.9"/><polygon points="12,2 16,6 12,22 8,6" fill="white" opacity="0.3"/></svg>
+        </button>
+        <span class="mobile-option-label">Blanco</span>
+      </div>
+      <div class="flex flex-col items-center gap-1">
+        <button type="button" class="crystal-thumb" data-crystal="red">
+          <svg class="w-8 h-8" viewBox="0 0 24 24" fill="#ff2200" filter="drop-shadow(0 0 6px #ff2200)"><polygon points="12,2 20,10 12,22 4,10" opacity="0.9"/><polygon points="12,2 16,6 12,22 8,6" fill="white" opacity="0.3"/></svg>
+        </button>
+        <span class="mobile-option-label">Rojo</span>
+      </div>
+      <div class="flex flex-col items-center gap-1">
+        <button type="button" class="crystal-thumb" data-crystal="yellow">
+          <svg class="w-8 h-8" viewBox="0 0 24 24" fill="#ffcc00" filter="drop-shadow(0 0 6px #ffcc00)"><polygon points="12,2 20,10 12,22 4,10" opacity="0.9"/><polygon points="12,2 16,6 12,22 8,6" fill="white" opacity="0.3"/></svg>
+        </button>
+        <span class="mobile-option-label">Amarillo</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEBGL FALLBACK -->
+  <div id="webgl-error" class="fixed inset-0 z-50 items-center justify-center px-6 text-center"
+       style="display:none; background: rgba(0,0,0,0.92);">
+    <div>
+      <p class="text-neon-cyan font-display text-lg tracking-widest mb-3">SABLE NO DISPONIBLE</p>
+      <p class="text-gray-400 text-[0.7rem] leading-relaxed max-w-sm mx-auto">Tu navegador no pudo iniciar WebGL (necesario para el 3D). Actualiza el navegador o prueba desde otro dispositivo.</p>
+      <a href="/" class="btn-cyber inline-block mt-6 px-6 py-3 no-underline">VOLVER AL INICIO</a>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      function showTab(name) {
+        var sleeve = document.getElementById('mob-options-sleeve');
+        var crystal = document.getElementById('mob-options-crystal');
+        var tS = document.getElementById('mob-tab-sleeve');
+        var tC = document.getElementById('mob-tab-crystal');
+        sleeve.style.display = name === 'sleeve' ? 'flex' : 'none';
+        crystal.style.display = name === 'crystal' ? 'flex' : 'none';
+        tS.classList.toggle('active', name === 'sleeve');
+        tC.classList.toggle('active', name === 'crystal');
+      }
+      var btS = document.getElementById('mob-tab-sleeve');
+      var btC = document.getElementById('mob-tab-crystal');
+      if (btS) btS.addEventListener('click', function() { showTab('sleeve'); });
+      if (btC) btC.addEventListener('click', function() { showTab('crystal'); });
+      showTab('sleeve');
+    })();
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script type="module" src="/js/configurator-page.js"></script>
 </body>
