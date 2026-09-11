@@ -118,8 +118,66 @@ renderer.domElement.addEventListener('webglcontextrestored', () => {
 
 const scene = new THREE.Scene();
 
+/* ══════════════════════════════════════════════════════════════
+   FONDO: imagen de identidad con recorte tipo CSS "cover".
+   Se pre-recorta al aspecto de la ventana y se pinta como
+   CanvasTexture -> nunca deforma ni deja el fondo en negro.
+   ══════════════════════════════════════════════════════════════ */
+const BG_URL = '/models/wallpapers/capa 1,2,3.jpeg';
+const bgImage = new Image();
+let bgTexture = null;
+let coverTimer = null;
+
+function renderCoverBackground() {
+  if (!bgImage.naturalWidth) return;
+  const iw = bgImage.naturalWidth;
+  const ih = bgImage.naturalHeight;
+  const vw = Math.max(1, window.innerWidth);
+  const vh = Math.max(1, window.innerHeight);
+  const imgRatio = iw / ih;
+  const viewRatio = vw / vh;
+
+  let sx, sy, sw, sh;
+  if (imgRatio > viewRatio) {
+    sw = iw;
+    sh = Math.round(iw / viewRatio);
+    sx = 0;
+    sy = Math.round((ih - sh) / 2);
+  } else {
+    sh = ih;
+    sw = Math.round(ih * viewRatio);
+    sy = 0;
+    sx = Math.round((iw - sw) / 2);
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = vw;
+  canvas.height = vh;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(bgImage, sx, sy, sw, sh, 0, 0, vw, vh);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+
+  if (bgTexture) bgTexture.dispose();
+  bgTexture = tex;
+  scene.background = tex;
+}
+
+function scheduleCoverBackground() {
+  clearTimeout(coverTimer);
+  coverTimer = setTimeout(renderCoverBackground, 180);
+}
+
+bgImage.onload = () => {
+  renderCoverBackground();
+  window.addEventListener('resize', scheduleCoverBackground);
+  window.addEventListener('orientationchange', () => setTimeout(scheduleCoverBackground, 250));
+};
+bgImage.src = BG_URL;
+
 const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 1000);
-camera.position.set(4, 2.5, 5);
+camera.position.set(7.2, 4.5, 9);
 
 /* ══════════════════════════════════════════════════════════════
    CONTROLES
@@ -128,7 +186,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.minDistance = 3;
-controls.maxDistance = 25;
+controls.maxDistance = 45;
 controls.target.set(0, 0, 0);
 controls.minPolarAngle = 0.2;
 controls.maxPolarAngle = Math.PI * 0.85;
