@@ -117,10 +117,6 @@ renderer.domElement.addEventListener('webglcontextrestored', () => {
 });
 
 const scene = new THREE.Scene();
-new THREE.TextureLoader().load('/models/wallpapers/capa 1,2,3.jpeg', (tex) => {
-  tex.colorSpace = THREE.SRGBColorSpace;
-  scene.background = tex;
-});
 
 const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 1000);
 camera.position.set(4, 2.5, 5);
