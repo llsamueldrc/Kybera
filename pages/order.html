@@ -30,7 +30,7 @@
 
   <!-- WALLPAPER -->
   <div class="fixed inset-0 w-screen h-screen z-0"
-       style="background: url('/wallpapers/capa 1,2,3.jpeg') center/cover no-repeat;">
+       style="background: url('/models/wallpapers/capa 1,2,3.jpeg') center/cover no-repeat;">
   </div>
 
   <!-- NAV -->
@@ -42,9 +42,9 @@
         </svg>
         <span class="text-neon-cyan font-display font-bold text-lg tracking-widest neon-text">KYBERA</span>
       </a>
-      <div class="flex items-center gap-6">
-        <a href="/configurator" class="text-sm text-gray-400 hover:text-neon-cyan transition-colors duration-300 tracking-wider no-underline">CONFIGURATOR</a>
-        <a href="/tracker" class="text-sm text-gray-400 hover:text-neon-cyan transition-colors duration-300 tracking-wider no-underline">TRACKER</a>
+<div class="flex items-center gap-6">
+        <a href="/configurator" class="text-sm text-gray-400 hover:text-neon-cyan transition-colors duration-300 tracking-wider no-underline">CONFIGURADOR</a>
+        <a href="/tracker" class="text-sm text-gray-400 hover:text-neon-cyan transition-colors duration-300 tracking-wider no-underline">RASTREO</a>
       </div>
     </div>
   </nav>
@@ -55,44 +55,44 @@
 
       <!-- Order Form -->
       <div class="cyber-panel p-6 flex-1 max-h-[85vh] overflow-y-auto">
-        <div class="panel-label text-center mb-6">[ ORDER ACQUISITION REGISTRY ]</div>
-        <form id="order-form" class="flex flex-col gap-5">
+        <div class="panel-label text-center mb-6">[ REGISTRO DE PEDIDO ]</div>
+<form id="order-form" class="flex flex-col gap-5">
           <div>
-            <p class="text-[0.6rem] text-cyan-400/60 tracking-widest mb-3">[ CUSTOMER IDENTIFICATION ]</p>
+            <p class="form-section-header mb-3">[ IDENTIFICACIÓN DEL CLIENTE ]</p>
             <div class="flex flex-col gap-3">
               <div>
-                <label class="text-[0.55rem] text-gray-500 tracking-wider mb-1 block">Name Full:</label>
-                <input type="text" name="customer_name" class="cyber-input" placeholder="Enter full name" required>
+                <label class="form-label mb-1 block">Nombre Completo:</label>
+                <input type="text" name="customer_name" class="cyber-input" placeholder="Ingresa tu nombre completo" required>
               </div>
               <div>
-                <label class="text-[0.55rem] text-gray-500 tracking-wider mb-1 block">Corporate Email:</label>
-                <input type="email" name="customer_email" class="cyber-input" placeholder="name@corporation.com" required>
+                <label class="form-label mb-1 block">Correo Electrónico:</label>
+                <input type="email" name="customer_email" class="cyber-input" placeholder="tu@correo.com" required>
               </div>
               <div>
-                <label class="text-[0.55rem] text-gray-500 tracking-wider mb-1 block">Contact ID:</label>
-                <input type="text" name="customer_id" class="cyber-input" placeholder="Identification code" required>
+                <label class="form-label mb-1 block">Doc. de Identidad:</label>
+                <input type="text" name="customer_id" class="cyber-input" placeholder="Número de documento" required>
               </div>
             </div>
           </div>
           <div>
-            <p class="text-[0.6rem] text-cyan-400/60 tracking-widest mb-3">[ SHIPPING LOGISTICS ]</p>
+            <p class="form-section-header mb-3">[ ENVÍO ]</p>
             <div class="flex flex-col gap-3">
               <div>
-                <label class="text-[0.55rem] text-gray-500 tracking-wider mb-1 block">Sector/Planet:</label>
-                <input type="text" name="sector_planet" class="cyber-input" placeholder="e.g. Naboo System" required>
+                <label class="form-label mb-1 block">País:</label>
+                <input type="text" name="sector_planet" class="cyber-input" placeholder="Ej.: Chile" required>
               </div>
               <div>
-                <label class="text-[0.55rem] text-gray-500 tracking-wider mb-1 block">Starport Address:</label>
-                <input type="text" name="starport_address" class="cyber-input" placeholder="Docking Bay / Platform" required>
+                <label class="form-label mb-1 block">Dirección de Envío:</label>
+                <input type="text" name="starport_address" class="cyber-input" placeholder="Calle, número y ciudad" required>
               </div>
               <div class="flex gap-3">
                 <div class="flex-1">
-                  <label class="text-[0.55rem] text-gray-500 tracking-wider mb-1 block">Cargo Bay:</label>
-                  <input type="text" name="cargo_bay" class="cyber-input" placeholder="Bay #">
+                  <label class="form-label mb-1 block">Código Postal:</label>
+                  <input type="text" name="cargo_bay" class="cyber-input" placeholder="Código postal">
                 </div>
                 <div class="flex-1">
-                  <label class="text-[0.55rem] text-gray-500 tracking-wider mb-1 block">Sub-sector:</label>
-                  <input type="text" name="subsector" class="cyber-input" placeholder="Area code">
+                  <label class="form-label mb-1 block">Región/Provincia:</label>
+                  <input type="text" name="subsector" class="cyber-input" placeholder="Región o provincia">
                 </div>
               </div>
             </div>
@@ -102,52 +102,68 @@
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
-              CONFIRM ACQUISITION & PROCESS PAYMENT
+              CONFIRMAR COMPRA Y PROCESAR PAGO
             </span>
           </button>
           <p id="form-error" class="text-red-400 text-[0.65rem] text-center hidden"></p>
         </form>
-        <p class="text-[0.5rem] text-gray-600 tracking-wider text-center mt-4">
-          PAYMENT TERMS: CORPORATE ACCOUNT / CONFIRMATION VIA ENCRYPTED EMAIL
+        <p class="form-note text-center mt-4">
+          FORMA DE PAGO: CUENTA EJECUTIVA / CONFIRMACIÓN VÍA CORREO ENCRIPTADO
         </p>
       </div>
 
-      <!-- Config Summary -->
-      <div class="cyber-panel-purple p-6 w-full lg:w-80 flex flex-col">
-        <div class="panel-label-purple text-center mb-4">[ CONFIGURATION SUMMARY ]</div>
-        <div class="w-full h-32 mb-4 flex items-center justify-center relative overflow-hidden"
-             style="background: radial-gradient(ellipse, rgba(0,255,255,0.08) 0%, transparent 70%);">
-          <svg viewBox="0 0 120 20" class="w-full h-full opacity-70">
-            <rect x="5" y="8" width="8" height="4" rx="1" fill="#666"/>
-            <rect x="13" y="7" width="12" height="6" rx="1" fill="#555"/>
-            <rect x="25" y="6" width="28" height="8" rx="2" fill="#aaaaaa"/>
-            <circle id="crystal-dot" cx="39" cy="10" r="2" fill="#0088ff" opacity="0.9"/>
-            <rect x="53" y="7" width="10" height="6" rx="1" fill="#666"/>
-            <rect x="63" y="8" width="6" height="4" rx="1" fill="#777"/>
-          </svg>
-        </div>
-        <div class="flex flex-col gap-3 flex-1 text-[0.7rem]">
-          <div class="flex justify-between items-center">
-            <span class="text-gray-500">Emitter Type:</span>
-            <span class="text-gray-300">Vanguard Industrial</span>
+        <!-- Config Summary -->
+        <div class="cyber-panel-purple p-6 w-full lg:w-80 flex flex-col">
+          <div class="panel-label-purple text-center mb-4">[ RESUMEN DE CONFIGURACIÓN ]</div>
+          <div class="w-full h-32 mb-4 flex items-center justify-center relative overflow-hidden" style="background: radial-gradient(ellipse, rgba(0,255,255,0.08) 0%, transparent 70%);">
+            <svg viewBox="0 0 120 20" class="w-full h-full opacity-70">
+              <rect x="5" y="8" width="8" height="4" rx="1" fill="#666"/>
+              <rect x="13" y="7" width="12" height="6" rx="1" fill="#555"/>
+              <rect x="25" y="6" width="28" height="8" rx="2" fill="#aaaaaa"/>
+              <circle id="crystal-dot" cx="39" cy="10" r="2" fill="#00ccff" opacity="0.9"/>
+              <rect x="53" y="7" width="10" height="6" rx="1" fill="#666"/>
+              <rect x="63" y="8" width="6" height="4" rx="1" fill="#777"/>
+            </svg>
           </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-500">Body Sleeve:</span>
-            <span id="summary-sleeve" class="text-neon-cyan">Brushed Steel</span>
+          <div class="flex flex-col gap-3 flex-1 text-[0.7rem]">
+            <div class="flex justify-between items-center">
+              <span class="form-label">Tipo Emisor:</span>
+              <span class="text-gray-300">Vanguard Industrial</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="form-label">Empuñadura:</span>
+              <span id="summary-sleeve" class="text-neon-cyan">Acero Cepillado</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="form-label">Pomo:</span>
+              <span class="text-gray-300">Reactor Cap X</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="form-label">Color del Cristal:</span>
+              <span id="summary-crystal" class="text-neon-cyan">Azul</span>
+            </div>
           </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-500">Pommel:</span>
-            <span class="text-gray-300">Reactor Cap X</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-500">Kyber Crystal:</span>
-            <span id="summary-crystal" class="text-neon-cyan">Blue</span>
-          </div>
-        </div>
         <div class="mt-6 pt-4 border-t border-purple-500/15">
-          <div class="flex justify-between items-center text-sm">
-            <span class="text-gray-400">ORDER TOTAL:</span>
-            <span class="text-neon-cyan font-display tracking-wider">450 KYBER CREDITS</span>
+          <div class="flex justify-center mb-3">
+            <div id="crystal-badge" class="flex items-center gap-2 px-4 py-2 rounded-full border" style="border-color: rgba(0,255,255,0.3); background: rgba(0,255,255,0.05);">
+              <span id="crystal-swatch" class="inline-block w-4 h-4 rounded-full" style="background: #00ccff; box-shadow: 0 0 10px rgba(0,204,255,0.5);"></span>
+              <span id="crystal-badge-name" class="text-neon-cyan text-[0.65rem] font-display tracking-wider">AZUL</span>
+              <span id="crystal-badge-hex" class="text-gray-500 text-[0.55rem]">#00ccff</span>
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <div class="flex justify-between items-center text-[0.65rem]">
+              <span class="form-label">Precio Base:</span>
+              <span class="text-gray-300">$450.00</span>
+            </div>
+            <div class="flex justify-between items-center text-[0.65rem]">
+              <span class="form-label">Personalización:</span>
+              <span id="summary-modifier" class="text-gray-300">$0.00</span>
+            </div>
+          </div>
+          <div class="flex justify-between items-center text-sm mt-3 pt-3 border-t border-purple-500/10">
+            <span class="text-gray-400">TOTAL PEDIDO:</span>
+            <span id="summary-total" class="text-neon-cyan font-display tracking-wider">$450.00 USD</span>
           </div>
         </div>
       </div>
@@ -161,12 +177,15 @@
         <polyline points="20 6 9 17 4 12"/>
       </svg>
       <h2 class="font-display text-xl text-neon-cyan tracking-widest mb-2">GRACIAS POR TU COMPRA</h2>
-      <p class="text-gray-400 text-sm mb-4">Tu codigo de orden es:</p>
+<p class="text-gray-400 text-sm mb-4">Tu código de orden es:</p>
       <div class="font-display text-3xl text-neon-cyan tracking-[0.2em] mb-4"
            style="text-shadow: 0 0 20px rgba(0,255,255,0.5);">
         <span id="modal-order-code">KYB-----</span>
       </div>
-      <p class="text-[0.55rem] text-gray-500 mb-6">Guarda este codigo para rastrear tu pedido</p>
+      <p class="text-[0.55rem] text-gray-500 mb-6">Guarda este código para rastrear tu pedido</p>
+      <a id="btn-track-order" class="btn-cyber py-2.5 w-full text-center block mb-3 no-underline" href="/tracker">
+        <span class="text-[0.65rem] tracking-wider">RASTREAR ORDEN</span>
+      </a>
       <button id="btn-close-modal" class="btn-cyber py-3 w-full">
         <span class="text-[0.65rem] tracking-wider">CERRAR</span>
       </button>
@@ -178,30 +197,49 @@
     const SUPABASE_URL = 'https://bmfmckurecmrpfaudaxa.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtZm1ja3VyZWNtcnBmYXVkYXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5NzQzNDcsImV4cCI6MjEwNDU1MDM0N30.iWLNVzHpWf38PU2hak4O6H8PkhnNnzyx5nM9y-wkb0E';
 
-    let supabase = null;
-    try {
-      if (window.supabase) {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let supabaseClient = null;
+      try {
+        if (window.supabase) {
+          supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        }
+      } catch (e) {
+        console.warn('Supabase init failed:', e);
       }
-    } catch (e) {
-      console.warn('Supabase init failed:', e);
+
+const SLEEVE_NAMES = {
+      brushedSteel: 'Acero Cepillado',
+      darkBronzed: 'Bronce Oscuro',
+      ancientStone: 'Piedra Antigua'
+    };
+
+ const CRYSTAL_NAMES = {
+   blue: 'Azul', green: 'Verde', purple: 'Violeta',
+   white: 'Blanco', red: 'Rojo', yellow: 'Amarillo'
+ };
+
+ const CRYSTAL_HEX = {
+   blue: '#00ccff', green: '#00ff66', purple: '#ee66ff',
+   white: '#ffffff', red: '#ff0000', yellow: '#ffcc00'
+ };
+
+    const SLEEVE_PRICES = {
+      brushedSteel: 0,
+      darkBronzed: 50,
+      ancientStone: 30
+    };
+
+    const BASE_PRICE = 450;
+
+    function formatUSD(amount) {
+      return '$' + amount.toFixed(2) + ' USD';
     }
 
-    const SLEEVE_NAMES = {
-      brushedSteel: 'Brushed Steel',
-      darkBronzed: 'Dark Bronzed',
-      ancientStone: 'Ancient Stone'
-    };
-
-    const CRYSTAL_NAMES = {
-      blue: 'Blue', green: 'Green', purple: 'Purple',
-      white: 'White', red: 'Red', black: 'Black', yellow: 'Yellow'
-    };
-
-    const CRYSTAL_HEX = {
-      blue: '#00ccff', green: '#00ff66', purple: '#ee66ff',
-      white: '#ffffff', red: '#ff4444', black: '#333333', yellow: '#ffcc00'
-    };
+    function updatePrice(sleeve) {
+      const modifier = SLEEVE_PRICES[sleeve] || 0;
+      const total = BASE_PRICE + modifier;
+      document.getElementById('summary-modifier').textContent = formatUSD(modifier);
+      document.getElementById('summary-total').textContent = formatUSD(total);
+    }
 
     function generateOrderCode() {
       const nums = String(Math.floor(1000 + Math.random() * 9000));
@@ -210,25 +248,51 @@
       return 'KYB-' + nums + '-' + letter;
     }
 
-    function showOrderModal(code) {
+function showOrderModal(code) {
       document.getElementById('modal-order-code').textContent = code;
+      const trackBtn = document.getElementById('btn-track-order');
+      if (trackBtn) trackBtn.setAttribute('href', '/tracker?code=' + encodeURIComponent(code));
       document.getElementById('order-modal').classList.remove('hidden');
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const config = JSON.parse(localStorage.getItem('kybera_config') || '{}');
+     function updateConfigFromStorage() {
+       const config = JSON.parse(localStorage.getItem('kybera_config') || '{}');
+       if (!config.sleeve && !config.crystal) {
+         window.location.href = '/configurator';
+         return false;
+       }
+       document.getElementById('summary-sleeve').textContent = SLEEVE_NAMES[config.sleeve] || 'Acero Cepillado';
+       document.getElementById('summary-crystal').textContent = CRYSTAL_NAMES[config.crystal] || 'Azul';
+       updatePrice(config.sleeve);
+const crystalColor = CRYSTAL_HEX[config.crystal] || '#00ccff';
+        document.getElementById('crystal-dot').setAttribute('fill', crystalColor);
+       if (document.getElementById('crystal-badge')) {
+         document.getElementById('crystal-badge').style.borderColor = crystalColor + '4d';
+         document.getElementById('crystal-badge').style.background = crystalColor + '0d';
+         document.getElementById('crystal-badge').style.boxShadow = '0 0 15px ' + crystalColor + '1a';
+       }
+       if (document.getElementById('crystal-swatch')) {
+         document.getElementById('crystal-swatch').style.background = crystalColor;
+         document.getElementById('crystal-swatch').style.boxShadow = '0 0 10px ' + crystalColor;
+       }
+       if (document.getElementById('crystal-badge-name')) {
+         document.getElementById('crystal-badge-name').textContent = CRYSTAL_NAMES[config.crystal] || 'Azul';
+       }
+       if (document.getElementById('crystal-badge-hex')) {
+         document.getElementById('crystal-badge-hex').textContent = crystalColor;
+       }
+       return true;
+     }
 
-      if (!config.sleeve && !config.crystal) {
-        window.location.href = '/configurator';
-        return;
-      }
+     document.addEventListener('DOMContentLoaded', () => {
+       if (!updateConfigFromStorage()) return;
+     });
 
-      document.getElementById('summary-sleeve').textContent = SLEEVE_NAMES[config.sleeve] || 'Brushed Steel';
-      document.getElementById('summary-crystal').textContent = CRYSTAL_NAMES[config.crystal] || 'Blue';
-
-      const crystalColor = CRYSTAL_HEX[config.crystal] || '#00ccff';
-      document.getElementById('crystal-dot').setAttribute('fill', crystalColor);
-    });
+     window.addEventListener('storage', (e) => {
+       if (e.key === 'kybera_config') {
+         updateConfigFromStorage();
+       }
+     });
 
     document.getElementById('order-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -238,12 +302,13 @@
       const config = JSON.parse(localStorage.getItem('kybera_config') || '{}');
 
       btn.disabled = true;
-      btn.innerHTML = '<span class="flex items-center justify-center gap-2">PROCESSING...</span>';
+      btn.innerHTML = '<span class="flex items-center justify-center gap-2">PROCESANDO...</span>';
       errorEl.classList.add('hidden');
 
       const form = e.target;
-      const orderData = {
+const orderData = {
         order_code: generateOrderCode(),
+        created_at: new Date().toISOString(),
         sleeve: config.sleeve || 'brushedSteel',
         crystal: config.crystal || 'blue',
         customer_name: form.customer_name.value,
@@ -256,29 +321,90 @@
         status: 'forging'
       };
 
-      let finalCode = orderData.order_code;
+let finalCode = orderData.order_code;
+      let supabaseOk = false;
+      let insertedOrderId = null;
 
-      if (supabase) {
+      if (supabaseClient) {
         try {
-          const { data, error } = await supabase
+          const { data, error } = await supabaseClient
             .from('orders')
             .insert(orderData)
-            .select('order_code')
+            .select('id, order_code')
             .single();
 
           if (!error && data) {
-            finalCode = data.order_code;
+            finalCode = data.order_code || finalCode;
+            insertedOrderId = data.id || null;
+            supabaseOk = true;
+          } else {
+            console.warn('Supabase insert error:', error);
           }
         } catch (err) {
           console.warn('Supabase insert failed:', err);
         }
+      } else {
+        console.warn('Supabase client not available');
       }
 
-      localStorage.setItem('kybera_last_order', finalCode);
-      localStorage.removeItem('kybera_config');
-      showOrderModal(finalCode);
+      if (supabaseOk) {
+        // Timeline inicial del pedido (forja/recepción)
+        if (insertedOrderId) {
+          try {
+            await supabaseClient.from('order_status_history').insert({
+              order_id: insertedOrderId,
+              status: 'forging',
+              note: 'Pedido creado por el cliente',
+              changed_at: new Date().toISOString()
+            });
+          } catch (err) {
+            console.warn('History init failed:', err);
+          }
+        }
+
+        // Actualizar/crear el perfil del cliente
+        try {
+          const { data: existing } = await supabaseClient
+            .from('customer_profiles')
+            .select('id, total_orders')
+            .eq('email', orderData.customer_email)
+            .maybeSingle();
+          if (existing && existing.id) {
+            await supabaseClient.from('customer_profiles')
+              .update({
+                full_name: orderData.customer_name,
+                doc_id: orderData.customer_id,
+                country: orderData.sector_planet,
+                total_orders: (existing.total_orders || 0) + 1,
+                last_order_at: new Date().toISOString()
+              })
+              .eq('id', existing.id);
+          } else {
+            await supabaseClient.from('customer_profiles')
+              .insert({
+                email: orderData.customer_email,
+                full_name: orderData.customer_name,
+                doc_id: orderData.customer_id,
+                country: orderData.sector_planet,
+                total_orders: 1,
+                last_order_at: new Date().toISOString()
+              });
+          }
+        } catch (err) {
+          console.warn('Customer profile upsert failed:', err);
+        }
+
+        localStorage.setItem('kybera_last_order', finalCode);
+        localStorage.removeItem('kybera_config');
+        showOrderModal(finalCode);
+      } else {
+        const formErr = document.getElementById('form-error');
+        formErr.textContent = 'NO SE PUDO GUARDAR LA ORDEN EN LA BASE DE DATOS. REVISA TU CONEXIÓN Y REINTENTA.';
+        formErr.classList.remove('hidden');
+      }
+
       btn.disabled = false;
-      btn.innerHTML = '<span class="flex items-center justify-center gap-2"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> CONFIRM ACQUISITION & PROCESS PAYMENT</span>';
+      btn.innerHTML = '<span class="flex items-center justify-center gap-2"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> CONFIRMAR COMPRA Y PROCESAR PAGO</span>';
     });
 
     document.getElementById('btn-close-modal').addEventListener('click', () => {
@@ -286,6 +412,7 @@
       window.location.href = '/';
     });
   </script>
+
 </body>
 </html>
 

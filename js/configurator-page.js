@@ -55,16 +55,22 @@ class Animator {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   STATE
-   ══════════════════════════════════════════════════════════════ */
+    STATE
+    ══════════════════════════════════════════════════════════════ */
 let currentSleeve = 'brushedSteel';
 let currentCrystal = 'blue';
 let bladeActive = false;
 let isAssembled = false;
 const animator = new Animator();
 
+function saveConfig() {
+  localStorage.setItem('kybera_config', JSON.stringify({ sleeve: currentSleeve, crystal: currentCrystal }));
+}
+
+saveConfig();
+
 // Sonido del sable de luz
-const saberSound = new Audio('/Sonido sable/light-saber.mp3');
+const saberSound = new Audio('/models/Sonido sable/light-saber.mp3');
 
 /* ══════════════════════════════════════════════════════════════
    RENDERER + SCENE + CAMERA
@@ -80,13 +86,13 @@ renderer.setClearColor(0x000000, 0);
 container.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-new THREE.TextureLoader().load('/wallpapers/capa 1,2,3.jpeg', (tex) => {
+new THREE.TextureLoader().load('/models/wallpapers/capa 1,2,3.jpeg', (tex) => {
   tex.colorSpace = THREE.SRGBColorSpace;
   scene.background = tex;
 });
 
 const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 1000);
-camera.position.set(4, 2, 8);
+camera.position.set(4, 2.5, 5);
 
 /* ══════════════════════════════════════════════════════════════
    CONTROLES
@@ -126,6 +132,11 @@ const frontFill = new THREE.DirectionalLight(0x99bbcc, 0.9);
 frontFill.position.set(0, 4, 10);
 scene.add(frontFill);
 
+const studioLight = new THREE.RectAreaLight(0x446688, 2.0, 6, 4);
+studioLight.position.set(0, 8, 0);
+studioLight.lookAt(0, 0, 0);
+scene.add(studioLight);
+
 const crystalLight = new THREE.PointLight(new THREE.Color(CRYSTAL_COLORS.blue.hex), 4.0, 14, 2);
 crystalLight.position.set(0, 0, 0);
 scene.add(crystalLight);
@@ -147,19 +158,19 @@ const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.inner
 });
 const composer = new EffectComposer(renderer, renderTarget);
 composer.addPass(new RenderPass(scene, camera));
-const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.6, 0.7, 0.6);
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 2.0, 0.8, 0.4);
 composer.addPass(bloomPass);
 composer.addPass(new OutputPass());
 
 /* ══════════════════════════════════════════════════════════════
    MATERIALES PBR REALISTAS (8 materiales)
    ══════════════════════════════════════════════════════════════ */
-const darkChrome = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, metalness: 0.99, roughness: 0.05 });
-const brushedSteel = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.95, roughness: 0.18 });
-const anodizedMetal = new THREE.MeshStandardMaterial({ color: 0x444444, metalness: 0.88, roughness: 0.22 });
+const darkChrome = new THREE.MeshPhysicalMaterial({ color: 0x1a1a1a, metalness: 0.99, roughness: 0.03, clearcoat: 1.0, clearcoatRoughness: 0.05 });
+const brushedSteel = new THREE.MeshPhysicalMaterial({ color: 0x888888, metalness: 0.95, roughness: 0.15, clearcoat: 0.5, clearcoatRoughness: 0.1 });
+const anodizedMetal = new THREE.MeshPhysicalMaterial({ color: 0x444444, metalness: 0.88, roughness: 0.18, clearcoat: 0.3 });
 const gripMat = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.75, roughness: 0.45 });
-const accentMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.92, roughness: 0.08 });
-const housingMat = new THREE.MeshStandardMaterial({ color: 0x666666, metalness: 0.90, roughness: 0.12 });
+const accentMat = new THREE.MeshPhysicalMaterial({ color: 0x111111, metalness: 0.92, roughness: 0.05, clearcoat: 0.8 });
+const housingMat = new THREE.MeshPhysicalMaterial({ color: 0x666666, metalness: 0.90, roughness: 0.1, clearcoat: 0.6 });
 const windowMat = new THREE.MeshStandardMaterial({ color: 0x0a1520, metalness: 0.4, roughness: 0.1, transparent: true, opacity: 0.2, side: THREE.DoubleSide });
 
 /* ══════════════════════════════════════════════════════════════
@@ -171,82 +182,116 @@ const sleeveGroup = new THREE.Group();
 const gripGroup = new THREE.Group();
 
 /* ══════════════════════════════════════════════════════════════
-   EMITTER REALISTA (18+ piezas)
-   ══════════════════════════════════════════════════════════════ */
-// Outer ring
-const emOuterRing = new THREE.Mesh(new THREE.TorusGeometry(0.68, 0.05, 16, 64), darkChrome.clone());
-emOuterRing.rotation.y = Math.PI / 2;
-emitterGroup.add(emOuterRing);
-
-// Base cone
-const emBaseCone = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.68, 0.4, 48), darkChrome.clone());
-emBaseCone.rotation.z = Math.PI / 2;
-emitterGroup.add(emBaseCone);
-
-// Inner cone
-const emInnerCone = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.45, 0.35, 48), brushedSteel.clone());
-emInnerCone.rotation.z = Math.PI / 2;
-emInnerCone.position.x = 0.18;
-emitterGroup.add(emInnerCone);
-
-// Top cap
-const emTopCap = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.3, 0.25, 48), anodizedMetal.clone());
-emTopCap.rotation.z = Math.PI / 2;
-emTopCap.position.x = 0.42;
-emitterGroup.add(emTopCap);
-
-// Emitter tip
-const emTip = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.25, 0.15, 48), accentMat.clone());
-emTip.rotation.z = Math.PI / 2;
-emTip.position.x = 0.58;
-emitterGroup.add(emTip);
-
-// Glow ring
-const emGlowRing = new THREE.Mesh(
-  new THREE.TorusGeometry(0.5, 0.02, 12, 64),
-  new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 5.0, transparent: true, opacity: 0.95 })
+    EMITOR CAMPANADO (bell-shaped emitter, 25+ piezas)
+    ══════════════════════════════════════════════════════════════ */
+// Base bell - cono truncado grande (campana)
+const emBell = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.35, 1.0, 1.2, 48),
+  darkChrome.clone()
 );
-emGlowRing.rotation.y = Math.PI / 2;
-emitterGroup.add(emGlowRing);
+emBell.rotation.z = Math.PI / 2;
+emitterGroup.add(emBell);
 
-// Inner glow ring
-const emInnerGlow = new THREE.Mesh(
-  new THREE.TorusGeometry(0.35, 0.015, 12, 48),
-  new THREE.MeshStandardMaterial({ color: 0x00eeff, emissive: 0x00eeff, emissiveIntensity: 4.0, transparent: true, opacity: 0.8 })
+// Campana inferior - aro de refuerzo
+const emBellBaseRing = new THREE.Mesh(
+  new THREE.TorusGeometry(1.0, 0.06, 16, 64),
+  anodizedMetal.clone()
 );
-emInnerGlow.rotation.y = Math.PI / 2;
-emInnerGlow.position.x = 0.18;
-emitterGroup.add(emInnerGlow);
+emBellBaseRing.rotation.y = Math.PI / 2;
+emBellBaseRing.position.x = 0.6;
+emitterGroup.add(emBellBaseRing);
 
-// 12 ventilation fins
-for (let i = 0; i < 12; i++) {
-  const angle = (i / 12) * Math.PI * 2;
+// Aro de transicion
+const emTransitionRing = new THREE.Mesh(
+  new THREE.TorusGeometry(0.85, 0.04, 12, 48),
+  brushedSteel.clone()
+);
+emTransitionRing.rotation.y = Math.PI / 2;
+emTransitionRing.position.x = 0.2;
+emitterGroup.add(emTransitionRing);
+
+// Cuerpo emisor - cilindro de conexion
+const emBody = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.4, 0.7, 0.8, 48),
+  darkChrome.clone()
+);
+emBody.rotation.z = Math.PI / 2;
+emBody.position.x = -0.1;
+emitterGroup.add(emBody);
+
+// Ranuras de ventilacion - 16 placas finas en espiral
+for (let i = 0; i < 16; i++) {
+  const angle = (i / 16) * Math.PI * 2;
   const fin = new THREE.Mesh(
-    new THREE.BoxGeometry(0.22, 0.006, 0.035),
+    new THREE.BoxGeometry(0.18, 0.005, 0.025),
     accentMat.clone()
   );
-  fin.position.set(0.08, Math.cos(angle) * 0.55, Math.sin(angle) * 0.55);
-  fin.rotation.x = angle;
+  const yPos = Math.cos(angle) * 0.85;
+  const zPos = Math.sin(angle) * 0.85;
+  fin.position.set(0.15, yPos, zPos);
+  fin.rotation.y = -angle;
+  fin.rotation.x = angle * 0.3;
   emitterGroup.add(fin);
 }
 
-// Detail ring 1
-const emDetailRing1 = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.02, 10, 48), anodizedMetal.clone());
-emDetailRing1.rotation.y = Math.PI / 2;
-emDetailRing1.position.x = -0.1;
-emitterGroup.add(emDetailRing1);
+// Anillo superior - aro de acoplamiento
+const emUpperRing = new THREE.Mesh(
+  new THREE.TorusGeometry(0.65, 0.04, 12, 48),
+  anodizedMetal.clone()
+);
+emUpperRing.rotation.y = Math.PI / 2;
+emUpperRing.position.x = -0.35;
+emitterGroup.add(emUpperRing);
 
-// Detail ring 2
-const emDetailRing2 = new THREE.Mesh(new THREE.TorusGeometry(0.56, 0.015, 10, 48), anodizedMetal.clone());
-emDetailRing2.rotation.y = Math.PI / 2;
-emDetailRing2.position.x = -0.18;
-emitterGroup.add(emDetailRing2);
+// Detalle anillo medio
+const emMidRing = new THREE.Mesh(
+  new THREE.TorusGeometry(0.5, 0.025, 10, 48),
+  brushedSteel.clone()
+);
+emMidRing.rotation.y = Math.PI / 2;
+emMidRing.position.x = -0.5;
+emitterGroup.add(emMidRing);
 
-// Socket ring
-const emSocketRing = new THREE.Mesh(new THREE.TorusGeometry(0.72, 0.035, 10, 48), darkChrome.clone());
+// Socket del cristal
+const emSocket = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.3, 0.5, 0.4, 48),
+  housingMat.clone()
+);
+emSocket.rotation.z = Math.PI / 2;
+emSocket.position.x = -0.7;
+emitterGroup.add(emSocket);
+
+// Anillo del socket
+const emSocketRing = new THREE.Mesh(
+  new THREE.TorusGeometry(0.52, 0.03, 10, 48),
+  accentMat.clone()
+);
 emSocketRing.rotation.y = Math.PI / 2;
-emSocketRing.position.x = -0.22;
+emSocketRing.position.x = -0.52;
 emitterGroup.add(emSocketRing);
+
+// Detalle anillo superior
+const emTopDetailRing = new THREE.Mesh(
+  new THREE.TorusGeometry(0.35, 0.015, 8, 48),
+  accentMat.clone()
+);
+emTopDetailRing.rotation.y = Math.PI / 2;
+emTopDetailRing.position.x = -0.85;
+emitterGroup.add(emTopDetailRing);
+
+// Punta del emisor - cono estrecho
+const emTip = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.15, 0.3, 0.3, 32),
+  accentMat.clone()
+);
+emTip.rotation.z = Math.PI / 2;
+emTip.position.x = -0.95;
+emitterGroup.add(emTip);
+
+// Emitter glow - luz desde el socket
+const emGlow = new THREE.PointLight(0x00ffff, 4.0, 8, 2);
+emGlow.position.set(-0.4, 0, 0);
+emitterGroup.add(emGlow);
 
 /* ══════════════════════════════════════════════════════════════
    CRYSTAL HOUSING REALISTA (10+ piezas)
@@ -291,21 +336,73 @@ crystalGroup.add(housingInternal);
 
 // Crystal
 const crystalColor = CRYSTAL_COLORS[currentCrystal];
-const crystalMesh = new THREE.Mesh(
-  new THREE.OctahedronGeometry(0.48, 0),
+let crystalMat;
+if (currentCrystal === 'white') {
+  crystalMat = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    emissive: 0xffffff,
+    emissiveIntensity: 15.0,
+    metalness: 0.0,
+    roughness: 0.15
+  });
+} else {
+  crystalMat = new THREE.MeshPhysicalMaterial({
+    color: new THREE.Color(crystalColor.hex),
+    emissive: new THREE.Color(crystalColor.hex),
+    emissiveIntensity: 5.0,
+    metalness: 0.1,
+    roughness: 0.02,
+    transmission: 0.2,
+    thickness: 1.5,
+    transparent: true,
+    opacity: 0.95,
+    ior: 2.0
+  });
+}
+const crystalMesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.52, 0), crystalMat);
+crystalMesh.scale.set(1, 1.8, 1);
+crystalMesh.position.x = -0.8;
+crystalGroup.add(crystalMesh);
+
+const innerCrystal = new THREE.Mesh(
+  new THREE.TetrahedronGeometry(0.3, 0),
   new THREE.MeshStandardMaterial({
     color: new THREE.Color(crystalColor.hex),
     emissive: new THREE.Color(crystalColor.hex),
-    emissiveIntensity: 4.0,
-    metalness: 0.1,
-    roughness: 0.05,
+    emissiveIntensity: currentCrystal === 'white' ? 20.0 : 8.0,
+    metalness: 0.0,
+    roughness: 0.1,
     transparent: true,
-    opacity: 0.95
+    opacity: 0.6
   })
 );
-crystalMesh.scale.set(1, 1.5, 1);
-crystalMesh.position.x = -0.8;
-crystalGroup.add(crystalMesh);
+innerCrystal.scale.set(1, 1.5, 1);
+innerCrystal.position.x = -0.8;
+crystalGroup.add(innerCrystal);
+
+const crystalGlowRing = new THREE.Mesh(
+  new THREE.TorusGeometry(0.65, 0.015, 8, 48),
+  new THREE.MeshStandardMaterial({ color: new THREE.Color(crystalColor.hex), emissive: new THREE.Color(crystalColor.hex), emissiveIntensity: 6.0, transparent: true, opacity: 0.7 })
+);
+crystalGlowRing.rotation.y = Math.PI / 2;
+crystalGlowRing.position.x = -0.8;
+crystalGroup.add(crystalGlowRing);
+
+const orbitRing1 = new THREE.Mesh(
+  new THREE.TorusGeometry(0.72, 0.008, 8, 48),
+  new THREE.MeshStandardMaterial({ color: new THREE.Color(crystalColor.hex), emissive: new THREE.Color(crystalColor.hex), emissiveIntensity: 3.0, transparent: true, opacity: 0.4 })
+);
+orbitRing1.rotation.x = Math.PI / 3;
+orbitRing1.position.x = -0.8;
+crystalGroup.add(orbitRing1);
+
+const orbitRing2 = new THREE.Mesh(
+  new THREE.TorusGeometry(0.72, 0.008, 8, 48),
+  new THREE.MeshStandardMaterial({ color: new THREE.Color(crystalColor.hex), emissive: new THREE.Color(crystalColor.hex), emissiveIntensity: 3.0, transparent: true, opacity: 0.4 })
+);
+orbitRing2.rotation.x = -Math.PI / 3;
+orbitRing2.position.x = -0.8;
+crystalGroup.add(orbitRing2);
 
 crystalGroup.add(crystalLight);
 
@@ -378,74 +475,136 @@ sleeveGroup.add(sleeveAccent);
 const sleeveMeshes = [sleeveBody];
 
 /* ══════════════════════════════════════════════════════════════
-   GRIP REALISTA (12+ piezas)
-   ══════════════════════════════════════════════════════════════ */
-// Connector
-const gripConn = new THREE.Mesh(new THREE.CylinderGeometry(0.52, 0.72, 0.4, 48), darkChrome.clone());
-gripConn.rotation.z = Math.PI / 2;
-gripConn.position.x = 1.5;
-gripGroup.add(gripConn);
+GRIP DETALLADO (helical grooves + control box + pommel)
+     ══════════════════════════════════════════════════════════════ */
+  // Connector
+  const gripConn = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.75, 0.5, 48), darkChrome.clone());
+  gripConn.rotation.z = Math.PI / 2;
+  gripConn.position.x = 1.5;
+  gripGroup.add(gripConn);
 
-// Grip base
-const gripBase = new THREE.Mesh(new THREE.CylinderGeometry(0.72, 0.78, 2.8, 48), gripMat.clone());
-gripBase.rotation.z = Math.PI / 2;
-gripGroup.add(gripBase);
+  // Grip base principal
+  const gripBase = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.8, 3.0, 48), gripMat.clone());
+  gripBase.rotation.z = Math.PI / 2;
+  gripGroup.add(gripBase);
 
-// 6 grip rings
-for (let i = 0; i < 6; i++) {
-  const r = new THREE.Mesh(
-    new THREE.TorusGeometry(0.78, 0.035, 10, 48),
+  // Ranuras helicoidales de agarre (8 espirales)
+  for (let i = 0; i < 8; i++) {
+    const t = i / 8;
+    const gripAngle = t * Math.PI * 6;
+    const grooveLen = 2.2;
+    const groove = new THREE.Mesh(
+      new THREE.BoxGeometry(0.012, 0.025, grooveLen),
+      accentMat.clone()
+    );
+    const x = -1.2 + t * 2.4;
+    const y = Math.cos(gripAngle) * 0.55;
+    const z = Math.sin(gripAngle) * 0.55;
+    groove.position.set(x, y, z);
+    groove.rotation.y = -gripAngle;
+    groove.rotation.x = 0.15;
+    gripGroup.add(groove);
+  }
+
+  // Anillo de transicion grip-emisor
+  const gripEmRing = new THREE.Mesh(
+    new THREE.TorusGeometry(0.78, 0.03, 12, 48),
     anodizedMetal.clone()
   );
-  r.rotation.y = Math.PI / 2;
-  r.position.x = -1.3 + i * 0.52;
-  gripGroup.add(r);
-}
+  gripEmRing.rotation.y = Math.PI / 2;
+  gripEmRing.position.x = -1.0;
+  gripGroup.add(gripEmRing);
 
-// 4 detail bands
-for (let i = 0; i < 4; i++) {
-  const band = new THREE.Mesh(
-    new THREE.TorusGeometry(0.76, 0.01, 8, 48),
+  // Anillo de transicion grip-pommel
+  const gripPommelRing = new THREE.Mesh(
+    new THREE.TorusGeometry(0.82, 0.035, 12, 48),
+    brushedSteel.clone()
+  );
+  gripPommelRing.rotation.y = Math.PI / 2;
+  gripPommelRing.position.x = 0.8;
+  gripGroup.add(gripPommelRing);
+
+  // Caja de control lateral
+  const controlBox = new THREE.Mesh(
+    new THREE.BoxGeometry(0.6, 0.5, 0.25),
+    darkChrome.clone()
+  );
+  controlBox.position.set(0.3, 0.4, 0.85);
+  controlBox.rotation.y = Math.PI / 4;
+  gripGroup.add(controlBox);
+
+  // Boton de control
+  const controlButton = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.08, 0.08, 0.05, 16),
     accentMat.clone()
   );
-  band.rotation.y = Math.PI / 2;
-  band.position.x = -0.78 + i * 0.52;
-  gripGroup.add(band);
-}
+  controlButton.position.set(0.55, 0.5, 0.92);
+  controlButton.rotation.y = Math.PI / 4;
+  controlButton.rotation.z = Math.PI / 2;
+  gripGroup.add(controlButton);
 
-// Pommel cone
-const pommel = new THREE.Mesh(new THREE.CylinderGeometry(0.82, 0.98, 0.55, 48), darkChrome.clone());
-pommel.rotation.z = Math.PI / 2;
-pommel.position.x = -1.6;
-gripGroup.add(pommel);
+  // Detalle caja - panel
+  const controlPanel = new THREE.Mesh(
+    new THREE.BoxGeometry(0.55, 0.4, 0.01),
+    new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.5, roughness: 0.6 })
+  );
+  controlPanel.position.set(0.3, 0.4, 0.98);
+  gripGroup.add(controlPanel);
 
-// Pommel ring
-const pommelRing = new THREE.Mesh(new THREE.TorusGeometry(0.9, 0.05, 12, 48), brushedSteel.clone());
-pommelRing.rotation.y = Math.PI / 2;
-pommelRing.position.x = -1.6;
-gripGroup.add(pommelRing);
+  // Pomo inferior - esfera pesada
+  const pommelBody = new THREE.Mesh(
+    new THREE.SphereGeometry(0.55, 32, 32),
+    darkChrome.clone()
+  );
+  pommelBody.scale.set(1, 0.7, 1);
+  pommelBody.position.set(-1.8, 0, 0);
+  gripGroup.add(pommelBody);
 
-// Pommel cap
-const pommelCap = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.82, 0.18, 48), accentMat.clone());
-pommelCap.rotation.z = Math.PI / 2;
-pommelCap.position.x = -1.92;
-gripGroup.add(pommelCap);
+  // Anillo de anclaje del pomo
+  const pommelAnchor = new THREE.Mesh(
+    new THREE.TorusGeometry(0.6, 0.05, 12, 48),
+    brushedSteel.clone()
+  );
+  pommelAnchor.rotation.y = Math.PI / 2;
+  pommelAnchor.position.set(-1.35, 0, 0);
+  gripGroup.add(pommelAnchor);
 
-/* ══════════════════════════════════════════════════════════════
-   BLADE (hidden) - REALISMO EXTREMO
-   ══════════════════════════════════════════════════════════════ */
+  // Tapa del pomo
+  const pommelCap = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.3, 0.55, 0.3, 32),
+    accentMat.clone()
+  );
+  pommelCap.rotation.z = Math.PI / 2;
+  pommelCap.position.set(-2.1, 0, 0);
+  gripGroup.add(pommelCap);
+
+  // Detalle pomo - linea decorativa
+  const pommelDetail = new THREE.Mesh(
+    new THREE.TorusGeometry(0.4, 0.02, 8, 32),
+    anodizedMetal.clone()
+  );
+  pommelDetail.rotation.y = Math.PI / 2;
+  pommelDetail.position.set(-1.8, 0, 0);
+  gripGroup.add(pommelDetail);
+
+  const gripMeshes = [gripBase, gripConn, controlBox];
+
+  /* ══════════════════════════════════════════════════════════════
+     BLADE (hidden) - REALISMO EXTREMO
+     ══════════════════════════════════════════════════════════════ */
 const bladeColor = new THREE.Color(crystalColor.hex);
 
 // Blade principal - pivote en base
-const bladeGeo = new THREE.CylinderGeometry(0.72, 0.48, 15.0, 24);
-bladeGeo.translate(0, 11.8, 0);
+const bladeGeo = new THREE.CylinderGeometry(0.72, 0.48, 18.0, 24);
+bladeGeo.translate(0, 12.8, 0);
 const bladeMesh = new THREE.Mesh(
   bladeGeo,
-  new THREE.MeshStandardMaterial({
+  new THREE.MeshPhysicalMaterial({
     color: bladeColor, emissive: bladeColor,
-    emissiveIntensity: 8.0, transparent: true, opacity: 0.95, side: THREE.DoubleSide,
-    roughness: 0.1, metalness: 0.0,
-    depthWrite: true, depthTest: true
+    emissiveIntensity: 9.0, transparent: true, opacity: 0.92, side: THREE.DoubleSide,
+    roughness: 0.05, metalness: 0.1,
+    depthWrite: true, depthTest: true,
+    transmission: 0.3, thickness: 2.0
   })
 );
 bladeMesh.rotation.z = Math.PI / 2;
@@ -454,12 +613,12 @@ bladeMesh.position.x = 0.0;
 emitterGroup.add(bladeMesh);
 
 // Blade glow - pivote en base
-const glowGeo = new THREE.CylinderGeometry(1.2, 0.9, 15.0, 24);
-glowGeo.translate(0, 11.8, 0);
+const glowGeo = new THREE.CylinderGeometry(1.2, 0.9, 18.0, 24);
+glowGeo.translate(0, 12.8, 0);
 const bladeGlow = new THREE.Mesh(
   glowGeo,
   new THREE.MeshBasicMaterial({
-    color: bladeColor, transparent: true, opacity: 0.3, side: THREE.DoubleSide,
+    color: bladeColor, transparent: true, opacity: 0.25, side: THREE.DoubleSide,
     depthWrite: true, depthTest: true
   })
 );
@@ -469,8 +628,8 @@ bladeGlow.position.x = 0.0;
 emitterGroup.add(bladeGlow);
 
 // Blade core - pivote en base
-const coreGeo = new THREE.CylinderGeometry(0.18, 0.12, 15.0, 12);
-coreGeo.translate(0, 11.8, 0);
+const coreGeo = new THREE.CylinderGeometry(0.18, 0.12, 18.0, 12);
+coreGeo.translate(0, 12.8, 0);
 const bladeCore = new THREE.Mesh(
   coreGeo,
   new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, depthWrite: true, depthTest: true })
@@ -481,52 +640,87 @@ bladeCore.position.x = 0.0;
 emitterGroup.add(bladeCore);
 
 // Blade PointLight - iluminación real
-const bladeLight = new THREE.PointLight(bladeColor, 10.0, 20, 2);
-bladeLight.position.x = -15.0;
+const bladeLight = new THREE.PointLight(bladeColor, 12.0, 25, 2);
+bladeLight.position.x = -20.0;
 emitterGroup.add(bladeLight);
 
 // Función para cambiar estilo de hoja
 function setBladeStyle(colorKey) {
   const c = new THREE.Color(CRYSTAL_COLORS[colorKey].hex);
 
-  // ═══ STANDARD: colores tradicionales con BRILLO ═══
   bladeMesh.geometry.dispose();
-  const newBladeGeo = new THREE.CylinderGeometry(0.72, 0.48, 15.0, 24);
-  newBladeGeo.translate(0, 11.8, 0);
+  const newBladeGeo = new THREE.CylinderGeometry(0.72, 0.48, 18.0, 24);
+  newBladeGeo.translate(0, 12.8, 0);
   bladeMesh.geometry = newBladeGeo;
   bladeMesh.material.color.copy(c);
   bladeMesh.material.emissive.copy(c);
-  bladeMesh.material.emissiveIntensity = 8.0;
-  bladeMesh.material.roughness = 0.1;
-  bladeMesh.material.metalness = 0.0;
+  bladeMesh.material.emissiveIntensity = 9.0;
+  bladeMesh.material.roughness = 0.05;
+  bladeMesh.material.metalness = 0.1;
   bladeMesh.material.depthWrite = true;
   bladeMesh.material.depthTest = true;
   bladeMesh.material.needsUpdate = true;
 
-  // Glow del color - más visible
   bladeGlow.geometry.dispose();
-  const newGlowGeo = new THREE.CylinderGeometry(1.2, 0.9, 15.0, 24);
-  newGlowGeo.translate(0, 11.8, 0);
+  const newGlowGeo = new THREE.CylinderGeometry(1.2, 0.9, 18.0, 24);
+  newGlowGeo.translate(0, 12.8, 0);
   bladeGlow.geometry = newGlowGeo;
   bladeGlow.material.color.copy(c);
-  bladeGlow.material.opacity = 0.3;
+  bladeGlow.material.opacity = 0.25;
 
-  // Core blanco brillante
   bladeCore.geometry.dispose();
-  const newCoreGeo = new THREE.CylinderGeometry(0.18, 0.12, 15.0, 12);
-  newCoreGeo.translate(0, 11.8, 0);
+  const newCoreGeo = new THREE.CylinderGeometry(0.18, 0.12, 18.0, 12);
+  newCoreGeo.translate(0, 12.8, 0);
   bladeCore.geometry = newCoreGeo;
   bladeCore.material.color.set(0xffffff);
   bladeCore.material.opacity = 0.9;
 
-  // Light del color - intenso
   bladeLight.color.copy(c);
-  bladeLight.intensity = 10.0;
+  bladeLight.intensity = 12.0;
+
+  innerCrystal.material.color.copy(c);
+  innerCrystal.material.emissive.copy(c);
+  innerCrystal.material.emissiveIntensity = colorKey === 'white' ? 20.0 : 8.0;
+  innerCrystal.material.opacity = 0.6;
+
+  crystalGlowRing.material.color.copy(c);
+  crystalGlowRing.material.emissive.copy(c);
+  crystalGlowRing.material.emissiveIntensity = colorKey === 'white' ? 15.0 : 6.0;
+
+  orbitRing1.material.color.copy(c);
+  orbitRing1.material.emissive.copy(c);
+  orbitRing1.material.emissiveIntensity = colorKey === 'white' ? 12.0 : 3.0;
+
+  orbitRing2.material.color.copy(c);
+  orbitRing2.material.emissive.copy(c);
+  orbitRing2.material.emissiveIntensity = colorKey === 'white' ? 12.0 : 3.0;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ENERGY EFFECTS
-   ══════════════════════════════════════════════════════════════ */
+    PARTICLES
+    ══════════════════════════════════════════════════════════════ */
+const particleCount = 200;
+const particleGeo = new THREE.BufferGeometry();
+const particlePositions = new Float32Array(particleCount * 3);
+const particleSizes = new Float32Array(particleCount);
+for (let i = 0; i < particleCount; i++) {
+  particlePositions[i * 3] = (Math.random() - 0.5) * 10;
+  particlePositions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+  particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+  particleSizes[i] = Math.random() * 2 + 0.5;
+}
+particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+particleGeo.setAttribute('size', new THREE.BufferAttribute(particleSizes, 1));
+const particleMat = new THREE.PointsMaterial({
+  color: 0x00ffff,
+  size: 0.03,
+  transparent: true,
+  opacity: 0.5,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false
+});
+const particles = new THREE.Points(particleGeo, particleMat);
+scene.add(particles);
 const energyRing = new THREE.Mesh(
   new THREE.TorusGeometry(0.95, 0.01, 12, 64),
   new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 2.5, transparent: true, opacity: 0, side: THREE.DoubleSide })
@@ -586,6 +780,7 @@ document.querySelectorAll('[data-sleeve]').forEach(btn => {
     sleeveMeshes[0].material.metalness = s.metalness;
     sleeveMeshes[0].material.roughness = s.roughness;
     sleeveMeshes[0].material.needsUpdate = true;
+    saveConfig();
   });
 });
 
@@ -602,6 +797,7 @@ document.querySelectorAll('[data-crystal]').forEach(btn => {
     if (bladeActive) {
       setBladeStyle(currentCrystal);
     }
+    saveConfig();
   });
 });
 
@@ -728,6 +924,10 @@ function animate() {
   // Emitter glow pulsing
   emitterGlow.intensity = isAssembled ? 5.0 + Math.sin(t * 2) * 0.8 : 3.0;
 
+  // Particles rotation
+  particles.rotation.y += 0.001;
+  particles.rotation.x += 0.0005;
+
   // Auto rotate
   if (!isUserInteracting && !animator.isAnimating) {
     if (isAssembled) {
@@ -760,8 +960,5 @@ window.addEventListener('resize', () => {
    ORDER: Save config to localStorage before navigating
    -------------------------------------------------------------- */
 document.getElementById('btn-complete-order').addEventListener('click', () => {
-  localStorage.setItem('kybera_config', JSON.stringify({
-    sleeve: currentSleeve,
-    crystal: currentCrystal
-  }));
+  saveConfig();
 });

@@ -18,73 +18,236 @@
           }
         }
       }
-    }
-  </script>
+}
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      const SUPABASE_URL = 'https://bmfmckurecmrpfaudaxa.supabase.co';
+      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtZm1ja3VyZWNtcnBmYXVkYXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5NzQzNDcsImV4cCI6MjEwNDU1MDM0N30.iWLNVzHpWf38PU2hak4O6H8PkhnnNzyx5nM9y-wkb0E';
+      let supabaseClient = null;
+      try {
+        if (window.supabase) supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      } catch (e) { console.warn('Supabase init failed:', e); }
+
+      document.addEventListener('DOMContentLoaded', () => {
+      const contactForm = document.getElementById('contact-form');
+      if (!contactForm) return;
+      contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fb = document.getElementById('contact-feedback');
+        fb.classList.add('hidden');
+        try {
+          if (!supabaseClient) throw new Error('sin conexión');
+          const { error } = await supabaseClient.from('contact_messages').insert({
+            name: contactForm.name.value,
+            email: contactForm.email.value,
+            subject: contactForm.subject.value || '',
+            message: contactForm.message.value
+          });
+          if (error) throw error;
+          fb.textContent = 'MENSAJE ENVIADO CON ÉXITO';
+          fb.classList.remove('hidden');
+          fb.classList.remove('text-red-400');
+          fb.classList.add('text-green-400');
+          contactForm.reset();
+        } catch (err) {
+          console.warn('Contact send failed:', err);
+          fb.textContent = 'NO SE PUDO ENVIAR. REVISA TU CONEXIÓN.';
+          fb.classList.remove('hidden');
+          fb.classList.remove('text-green-400');
+          fb.classList.add('text-red-400');
+        }
+      });
+    });
+    </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-box {
+      background: rgba(0, 12, 24, 0.92);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 12px;
+      max-width: 560px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 2.5rem 2rem;
+      position: relative;
+      animation: modal-in 0.4s ease-out;
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.08), 0 0 80px rgba(0, 0, 0, 0.5);
+    }
+    @keyframes modal-in {
+      from { opacity: 0; transform: scale(0.92) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.5);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    .modal-close:hover {
+      color: #00ffff;
+      border-color: #00ffff;
+      box-shadow: 0 0 12px rgba(0, 255, 255, 0.3);
+    }
+    .modal-box h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: #00ffff;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      margin: 0 0 1.5rem 0;
+      text-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    }
+    .modal-box h3 {
+      font-family: 'Orbitron', sans-serif;
+      color: #00ffff;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      margin: 1.2rem 0 0.5rem 0;
+      text-transform: uppercase;
+    }
+    .modal-box p {
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 0.75rem;
+      line-height: 1.7;
+      margin: 0 0 0.8rem 0;
+    }
+    .modal-box hr {
+      border: none;
+      border-top: 1px solid rgba(0, 255, 255, 0.1);
+      margin: 1.2rem 0;
+    }
+    .modal-box .modal-footer {
+      text-align: center;
+      color: rgba(0, 255, 255, 0.4);
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      margin-top: 1rem;
+    }
+  </style>
 </head>
 <body class="bg-black text-white overflow-hidden m-0 p-0 font-mono">
 
-  <!-- WALLPAPER: hangar -->
-  <div class="fixed inset-0 w-screen h-screen z-0"
-       style="background: url('/wallpapers/capa 1,2,3.jpeg') center/cover no-repeat;">
-  </div>
+  <!-- WALLPAPER -->
+  <div class="fixed inset-0 w-screen h-screen z-0" style="background: url('/models/wallpapers/capa 1,2,3.jpeg') center/cover no-repeat;"></div>
 
   <!-- NAVBAR -->
   <nav class="landing-nav fixed top-0 left-0 w-full z-30 flex items-center justify-between px-6 md:px-10 py-4">
     <a href="/" class="font-display text-neon-cyan text-lg tracking-widest neon-text" style="text-decoration:none;">KYBERA</a>
-    <div class="flex items-center gap-8">
-      <a href="/">Inicio</a>
-      <a href="#about">Sobre KYBERA</a>
-      <a href="/tracker">Galería</a>
+    <div class="hamburger" id="hb" aria-label="Menu" role="button" tabindex="0">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="nav-links" id="nl">
+      <a href="#" id="ab">Sobre KYBERA</a>
+      <a href="/tracker">Tracker</a>
+      <a href="#" id="ac">Contacto</a>
     </div>
   </nav>
+  <div class="nav-overlay" id="no"></div>
+
+  <!-- ABOUT MODAL -->
+  <div class="modal-overlay" id="mb">
+    <div class="modal-box">
+      <button class="modal-close" id="mc" aria-label="Cerrar">&times;</button>
+      <h2>KYBERA</h2>
+      <hr>
+      <h3>Misión</h3>
+      <p>En KYBERA combinamos ingeniería de precisión con tecnología de vanguardia para crear sables de luz que superan los estándares de la Galaxia. Cada pieza es forjada a mano con materiales de grado militar, diseñada para resistir los combates más intensos y acompañar a su portador durante generaciones.</p>
+      <h3>Visión</h3>
+      <p>Ser la marca líder en fabricación de sables de luz personalizados, ofreciendo a cada Jedi o Sith la herramienta que merece — única, precisa y eterna. Aspiramos a unir artesanía tradicional con innovación tecnológica, creando armas que trascienden lo funcional para convertirse en extensiones del alma.</p>
+      <hr>
+      <h3>Trayectoria</h3>
+      <p>Desde 2019, KYBERA ha producido más de 2,500 sables de luz para clientes en todo el sector. Nuestro equipo de 12 artesanos especializados utiliza aleaciones de titanio grado aerospace y cristales kyber certificados por el Consejo Jedi.</p>
+      <p>Cada sable pasa por un riguroso proceso de 47 etapas de fabricación, desde el corte inicial de la empuñadura hasta la sintonización final del cristal kyber. Nuestro taller cuenta con hornos de fusión de grado industrial y cámaras de vacío para asegurar la pureza de cada componente.</p>
+      <p>Con más de 6 años de experiencia y cientos de clientes satisfechos en sistemas planetarios como Naboo, Coruscant y Tatooine, KYBERA se ha consolidado como sinónimo de calidad, precisión y confiabilidad en la forja de sables de luz.</p>
+      <hr>
+      <div class="modal-footer">KYBERA — PRECISION BEYOND THE STARS</div>
+    </div>
+  </div>
+
+  <!-- CONTACT MODAL -->
+  <div class="modal-overlay" id="mc2">
+    <div class="modal-box">
+      <button class="modal-close" id="mc3" aria-label="Cerrar">&times;</button>
+      <h2>CONTACTO</h2>
+      <form id="contact-form" class="flex flex-col gap-2.5 mb-2 text-left">
+        <h3>Envíanos un mensaje</h3>
+        <input type="text" name="name" class="cyber-input py-2 px-3" placeholder="Tu nombre" required>
+        <input type="email" name="email" class="cyber-input py-2 px-3" placeholder="tu@correo.com" required>
+        <input type="text" name="subject" class="cyber-input py-2 px-3" placeholder="Asunto (opcional)">
+        <textarea name="message" class="cyber-input py-2 px-3" rows="3" placeholder="Tu mensaje..." style="resize:none;" required></textarea>
+        <button type="submit" class="btn-cyber py-2.5 w-full"><span class="text-[0.65rem] tracking-wider">ENVIAR</span></button>
+        <p id="contact-feedback" class="text-[0.6rem] text-center text-green-400"></p>
+      </form>
+      <hr>
+      <h3>Correo Electrónico</h3>
+      <p>contact@kybera-galaxy.com</p>
+      <h3>Horario de Atención</h3>
+      <p>Lunes a Viernes — 09:00 a 18:00 (Coruscant Standard Time)</p>
+      <p>Sábados — 10:00 a 14:00 CST</p>
+      <hr>
+      <h3>Ubicación</h3>
+      <p>Sector 7, Torre KYBERA, Nivel 42</p>
+      <p>Coruscant — Distrito Industrial Galáctico</p>
+      <hr>
+      <h3>Redes Sociales</h3>
+      <p>HoloNet: @kybera.sables</p>
+      <p>Transmissions: @kyberaforge</p>
+      <p>HoloFeed: /KYBERAoficial</p>
+      <hr>
+      <div class="modal-footer">KYBERA — PRECISION BEYOND THE STARS</div>
+    </div>
+  </div>
 
   <!-- MAIN CONTENT -->
-  <div class="fixed inset-0 w-screen h-screen z-10 flex flex-col items-center justify-center pointer-events-auto">
-
-    <!-- Hero Content — centered over the holographic platform -->
-    <div class="text-center animate-fade-in relative z-10 px-4">
-      <h1 class="font-display text-3xl md:text-5xl lg:text-6xl font-black text-white mb-2 tracking-wider"
-          style="text-shadow: 0 0 40px rgba(0,255,255,0.35), 0 0 80px rgba(0,255,255,0.12);">
-        BIENVENIDO A
-      </h1>
-      <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-black text-neon-cyan mb-6 tracking-widest neon-text-glow">
-        KYBERA
-      </h1>
-      <p class="text-gray-300 text-sm md:text-base max-w-lg mx-auto mb-10 leading-relaxed tracking-wide"
-         style="text-shadow: 0 0 15px rgba(0,255,255,0.15);">
-        Diseñamos y fabricamos sables de luz realistas, interactivos y en 3D
-      </p>
+  <div class="hero-wrap fixed inset-0 w-screen h-screen z-10 flex flex-col items-center pointer-events-auto">
+    <div class="hero-main-inner text-center animate-fade-in relative z-10 px-4">
+      <h1 class="font-display text-3xl md:text-5xl lg:text-6xl font-black text-white mb-2 tracking-wider" style="text-shadow: 0 0 40px rgba(0,255,255,0.35), 0 0 80px rgba(0,255,255,0.12);">BIENVENIDO A</h1>
+      <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-black text-neon-cyan mb-6 tracking-widest neon-text-glow">KYBERA</h1>
+      <p class="text-gray-300 text-sm md:text-base max-w-lg mx-auto mb-10 leading-relaxed tracking-wide" style="text-shadow: 0 0 15px rgba(0,255,255,0.15);">Diseñamos y fabricamos sables de luz realistas, interactivos y en 3D</p>
       <a href="/configurator" class="landing-cta inline-block animate-pulse hover:animate-none">
         <span class="flex items-center gap-3">
-          <!-- Crystal/Gem icon -->
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M12 2L2 9l10 13L22 9l-10-7z"/>
-            <path d="M2 9h20"/>
-            <path d="M12 22V9"/>
-          </svg>
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 9l10 13L22 9l-10-7z"/><path d="M2 9h20"/><path d="M12 22V9"/></svg>
           INICIAR CONSTRUCCIÓN
         </span>
       </a>
     </div>
 
-    <!-- Holographic panels — left and right schematics -->
     <div class="hidden lg:block absolute left-8 top-1/2 -translate-y-1/2 w-48 animate-slide-left" style="animation-delay: 0.3s;">
       <div class="hologram-panel p-4">
         <div class="text-[0.5rem] text-cyan-400/60 tracking-widest mb-2">SCHEMATIC 01</div>
         <div class="border border-cyan-500/10 rounded p-3 flex items-center justify-center" style="height: 100px;">
-          <svg class="w-full h-full text-cyan-500/20" viewBox="0 0 120 40" fill="none" stroke="currentColor" stroke-width="0.5">
-            <rect x="10" y="15" width="100" height="10" rx="3"/>
-            <line x1="25" y1="15" x2="25" y2="25"/>
-            <line x1="40" y1="15" x2="40" y2="25"/>
-            <line x1="55" y1="15" x2="55" y2="25"/>
-            <line x1="70" y1="15" x2="70" y2="25"/>
-            <line x1="85" y1="15" x2="85" y2="25"/>
-            <circle cx="100" cy="20" r="4"/>
-          </svg>
+          <svg class="w-full h-full text-cyan-500/20" viewBox="0 0 120 40" fill="none" stroke="currentColor" stroke-width="0.5"><rect x="10" y="15" width="100" height="10" rx="3"/><line x1="25" y1="15" x2="25" y2="25"/><line x1="40" y1="15" x2="40" y2="25"/><line x1="55" y1="15" x2="55" y2="25"/><line x1="70" y1="15" x2="70" y2="25"/><line x1="85" y1="15" x2="85" y2="25"/><circle cx="100" cy="20" r="4"/></svg>
         </div>
         <div class="text-[0.45rem] text-gray-500 tracking-wider mt-2">HILT ASSEMBLY</div>
       </div>
@@ -94,22 +257,101 @@
       <div class="hologram-panel p-4">
         <div class="text-[0.5rem] text-cyan-400/60 tracking-widest mb-2">SCHEMATIC 02</div>
         <div class="border border-cyan-500/10 rounded p-3 flex items-center justify-center" style="height: 100px;">
-          <svg class="w-full h-full text-cyan-500/20" viewBox="0 0 120 40" fill="none" stroke="currentColor" stroke-width="0.5">
-            <rect x="10" y="18" width="60" height="4" rx="2"/>
-            <rect x="70" y="12" width="40" height="16" rx="8" opacity="0.3"/>
-            <line x1="70" y1="20" x2="110" y2="20" stroke-dasharray="2 2"/>
-          </svg>
+          <svg class="w-full h-full text-cyan-500/20" viewBox="0 0 120 40" fill="none" stroke="currentColor" stroke-width="0.5"><rect x="10" y="18" width="60" height="4" rx="2"/><rect x="70" y="12" width="40" height="16" rx="8" opacity="0.3"/><line x1="70" y1="20" x2="110" y2="20" stroke-dasharray="2 2"/></svg>
         </div>
         <div class="text-[0.45rem] text-gray-500 tracking-wider mt-2">CRYSTAL CORE</div>
       </div>
     </div>
 
-    <!-- Bottom signature -->
     <div class="absolute bottom-6 left-0 right-0 text-center">
       <span class="font-display text-lg text-cyan-500/15 tracking-[0.5em]">KYBERA</span>
     </div>
   </div>
 
+  <script>
+    (function() {
+      var hb = document.getElementById('hb');
+      var nl = document.getElementById('nl');
+      var no = document.getElementById('no');
+      var mb = document.getElementById('mb');
+      var mc = document.getElementById('mc');
+      var mc2 = document.getElementById('mc2');
+      var mc3 = document.getElementById('mc3');
+      var ab = document.getElementById('ab');
+      var ac = document.getElementById('ac');
+
+      if (hb) {
+        hb.addEventListener('click', function() {
+          hb.classList.toggle('open');
+          nl.classList.toggle('open');
+          no.classList.toggle('open');
+        });
+        hb.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            hb.click();
+          }
+        });
+      }
+      if (no) {
+        no.addEventListener('click', function() {
+          if (hb) hb.classList.remove('open');
+          if (nl) nl.classList.remove('open');
+          no.classList.remove('open');
+        });
+      }
+      if (nl) {
+        var links = nl.querySelectorAll('a');
+        for (var i = 0; i < links.length; i++) {
+          links[i].addEventListener('click', function() {
+            if (hb) hb.classList.remove('open');
+            if (nl) nl.classList.remove('open');
+            if (no) no.classList.remove('open');
+          });
+        }
+      }
+
+      if (ab) {
+        ab.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (mb) mb.style.display = 'flex';
+        });
+      }
+      if (mc) {
+        mc.addEventListener('click', function() {
+          if (mb) mb.style.display = 'none';
+        });
+      }
+      if (mb) {
+        mb.addEventListener('click', function(e) {
+          if (e.target === mb) mb.style.display = 'none';
+        });
+      }
+
+      if (ac) {
+        ac.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (mc2) mc2.style.display = 'flex';
+        });
+      }
+      if (mc3) {
+        mc3.addEventListener('click', function() {
+          if (mc2) mc2.style.display = 'none';
+        });
+      }
+      if (mc2) {
+        mc2.addEventListener('click', function(e) {
+          if (e.target === mc2) mc2.style.display = 'none';
+        });
+      }
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          if (mb) mb.style.display = 'none';
+          if (mc2) mc2.style.display = 'none';
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
-

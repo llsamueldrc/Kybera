@@ -33,7 +33,7 @@
     .filter-btn.active { border-color: #00ffff; color: #00ffff; background: rgba(0,255,255,0.08); }
     .review-card { background: rgba(0,8,18,0.6); border: 1px solid rgba(0,255,255,0.1); border-radius: 0.5rem; overflow: hidden; transition: border-color 0.3s; }
     .review-card:hover { border-color: rgba(0,255,255,0.3); }
-    .review-img { width: 100%; height: 100px; object-fit: cover; display: flex; align-items: center; justify-content: center; }
+    .review-img { width: 100%; height: 110px; object-fit: contain; object-position: center; display: block; margin: 0 auto; }
     .review-card-body { padding: 0.5rem 0.6rem; }
     .review-stars { color: #ffcc00; font-size: 0.55rem; margin-bottom: 0.25rem; }
     .review-name { color: #aaa; font-size: 0.6rem; margin-bottom: 0.15rem; }
@@ -42,9 +42,9 @@
 </head>
 <body class="bg-black text-white overflow-hidden m-0 p-0 font-mono">
 
-  <!-- WALLPAPER: Capo 4.jpeg -->
+  <!-- WALLPAPER: Capa 4.jpeg -->
   <div class="fixed inset-0 w-screen h-screen z-0"
-       style="background: url('/wallpapers/Capo 4.jpeg') center/cover no-repeat;">
+       style="background: url('/models/wallpapers/Capa 4.jpeg') center/cover no-repeat;">
   </div>
 
   <!-- NAV -->
@@ -57,8 +57,8 @@
         <span class="text-neon-cyan font-display font-bold text-lg tracking-widest neon-text">KYBERA</span>
       </a>
       <div class="flex items-center gap-6">
-        <a href="/configurator" class="text-sm text-gray-400 hover:text-neon-cyan transition-colors duration-300 tracking-wider no-underline">CONFIGURATOR</a>
-        <a href="/tracker" class="text-sm text-neon-cyan transition-colors duration-300 tracking-wider no-underline">TRACKER</a>
+        <a href="/configurator" class="text-sm text-gray-400 hover:text-neon-cyan transition-colors duration-300 tracking-wider no-underline">CONFIGURADOR</a>
+        <a href="/tracker" class="text-sm text-neon-cyan transition-colors duration-300 tracking-wider no-underline">RASTREO</a>
       </div>
     </div>
   </nav>
@@ -66,19 +66,20 @@
   <!-- CONTENT: Two panels with gap -->
   <div class="fixed inset-0 w-screen h-screen z-10 pointer-events-auto overflow-y-auto"
        style="padding: 5rem 3rem 2rem;">
-    <div class="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto animate-fade-in">
+    <div class="flex flex-col lg:flex-row lg:items-start gap-8 w-full max-w-[1600px] mx-auto lg:justify-between animate-fade-in">
 
       <!-- LEFT PANEL: Customer References -->
-      <div class="flex-1 tracker-panel p-5">
-        <p class="text-[0.55rem] text-cyan-400/60 tracking-widest mb-4 text-center">[ CUSTOMER REFERENCES ]</p>
+      <div class="w-full lg:w-[520px] lg:flex-none tracker-panel p-5">
+        <p class="text-[0.55rem] text-cyan-400/60 tracking-widest mb-4 text-center">[ CLIENTES SATISFECHOS ]</p>
 
         <!-- Filter buttons -->
         <div class="flex gap-2 mb-4 justify-center flex-wrap">
-          <button class="filter-btn active" data-filter="all">ALL</button>
-          <button class="filter-btn" data-filter="blue">CYAN</button>
-          <button class="filter-btn" data-filter="purple">AMETHYST</button>
-          <button class="filter-btn" data-filter="green">EMERALD</button>
-          <button class="filter-btn" data-filter="red">CRIMSON</button>
+          <button class="filter-btn active" data-filter="all">TODOS</button>
+          <button class="filter-btn" data-filter="blue">AZUL</button>
+          <button class="filter-btn" data-filter="green">VERDE</button>
+          <button class="filter-btn" data-filter="purple">VIOLETA</button>
+          <button class="filter-btn" data-filter="red">ROJO</button>
+          <button class="filter-btn" data-filter="yellow">AMARILLO</button>
         </div>
 
         <!-- Reviews grid -->
@@ -92,21 +93,26 @@
 
         <!-- Order Code -->
         <div class="tracker-panel-purple p-5 text-center">
-          <p class="text-[0.5rem] text-purple-400/60 tracking-widest mb-2">[ ORDER TRACKING ]</p>
+          <p class="text-[0.5rem] text-purple-400/60 tracking-widest mb-2">[ RASTREO DE PEDIDO ]</p>
+          <div class="flex gap-2 mb-3">
+            <input type="text" id="track-input" class="tracker-search flex-1" placeholder="KYB-XXXX-X" maxlength="10">
+            <button id="btn-track" class="btn-cyber px-4 py-2 text-[0.6rem]">BUSCAR</button>
+          </div>
           <div class="font-display text-2xl text-neon-cyan tracking-[0.2em] mb-2"
                style="text-shadow: 0 0 15px rgba(0,255,255,0.4);">
             <span id="tracking-code">#KYB-----</span>
           </div>
+          <p id="track-error" class="text-red-400 text-[0.55rem] hidden mb-2">Pedido no encontrado. Revisa el código e inténtalo de nuevo.</p>
           <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden mt-3">
             <div id="progress-bar" class="h-full bg-neon-cyan rounded-full transition-all duration-500"
                  style="width: 10%; box-shadow: 0 0 8px rgba(0,255,255,0.5);"></div>
           </div>
-          <p id="progress-text" class="text-[0.5rem] text-gray-500 mt-2 tracking-wider">10% COMPLETE</p>
+          <p id="progress-text" class="text-[0.5rem] text-gray-500 mt-2 tracking-wider">10% COMPLETADO</p>
         </div>
 
         <!-- Timeline -->
         <div class="tracker-panel-purple p-5 flex-1">
-          <p class="text-[0.5rem] text-purple-400/60 tracking-widest mb-4">[ PROGRESS TRACKER ]</p>
+          <p class="text-[0.5rem] text-purple-400/60 tracking-widest mb-4">[ AVANCE DEL PEDIDO ]</p>
           <div id="timeline" class="flex flex-col gap-4">
             <!-- Rendered by JS -->
           </div>
@@ -114,19 +120,19 @@
 
         <!-- Config Summary -->
         <div class="tracker-panel-purple p-4">
-          <p class="text-[0.5rem] text-purple-400/60 tracking-widest mb-3 text-center">[ YOUR CONFIG ]</p>
+          <p class="text-[0.5rem] text-purple-400/60 tracking-widest mb-3 text-center">[ TU CONFIGURACIÓN ]</p>
           <div class="flex flex-col gap-2 text-[0.65rem]">
             <div class="flex justify-between">
-              <span class="text-gray-500">Sleeve:</span>
-              <span id="detail-sleeve" class="text-neon-cyan">Brushed Steel</span>
+              <span class="text-gray-500">Empuñadura:</span>
+              <span id="detail-sleeve" class="text-neon-cyan">Acero Cepillado</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-500">Crystal:</span>
-              <span id="detail-crystal" class="text-neon-cyan">Blue</span>
+              <span class="text-gray-500">Cristal:</span>
+              <span id="detail-crystal" class="text-neon-cyan">Azul</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-500">Status:</span>
-              <span id="detail-status" class="text-yellow-400">Forging</span>
+              <span class="text-gray-500">Estado:</span>
+              <span id="detail-status" class="text-yellow-400">Forja</span>
             </div>
           </div>
         </div>
@@ -134,10 +140,10 @@
         <!-- Actions -->
         <div class="flex gap-3">
           <a href="/configurator" class="btn-cyber flex-1 py-3 text-center no-underline">
-            <span class="text-[0.6rem] tracking-wider">NEW ORDER</span>
+            <span class="text-[0.6rem] tracking-wider">NUEVO PEDIDO</span>
           </a>
           <a href="/" class="btn-ensamblar flex-1 py-3 text-center no-underline">
-            <span class="text-[0.6rem] tracking-wider">HOME</span>
+            <span class="text-[0.6rem] tracking-wider">INICIO</span>
           </a>
         </div>
       </div>
@@ -146,109 +152,199 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const CRYSTAL_NAMES = {
-      blue: 'Blue', green: 'Green', purple: 'Purple',
-      white: 'White', red: 'Red', black: 'Black', yellow: 'Yellow'
-    };
-    const CRYSTAL_HEX = {
-      blue: '#00ccff', green: '#00ff66', purple: '#ee66ff',
-      white: '#ffffff', red: '#ff4444', black: '#333333', yellow: '#ffcc00'
-    };
+const CRYSTAL_NAMES = {
+  blue: 'Azul', green: 'Verde', purple: 'Violeta',
+  white: 'Blanco', red: 'Rojo', yellow: 'Amarillo'
+};
+const CRYSTAL_HEX = {
+  blue: '#00ccff', green: '#00ff66', purple: '#ee66ff',
+  white: '#ffffff', red: '#ff4444', yellow: '#ffcc00'
+};
     const SLEEVE_NAMES = {
-      brushedSteel: 'Brushed Steel', darkBronzed: 'Dark Bronzed', ancientStone: 'Ancient Stone'
+      brushedSteel: 'Acero Cepillado', darkBronzed: 'Bronce Oscuro', ancientStone: 'Piedra Antigua'
+    };
+    const STATUS_NAMES = {
+      forging: 'Forja', tuning: 'Sintonización', test: 'Prueba', ship: 'Envío', delivered: 'Entregado'
     };
 
     const REVIEWS = [
-      { name: 'Anakin S.', crystal: 'blue', stars: 5, text: 'Incredible power! Best build quality.', color: '#00ccff' },
-      { name: 'Ahsoka T.', crystal: 'green', stars: 5, text: 'Perfectly balanced, as all things should be.', color: '#00ff66' },
-      { name: 'Mace W.', crystal: 'purple', stars: 5, text: 'Absolutely perfect craftsmanship.', color: '#ee66ff' },
-      { name: 'Luke S.', crystal: 'green', stars: 5, text: 'Lights up the night beautifully.', color: '#00ff66' },
-      { name: 'Rey', crystal: 'blue', stars: 5, text: 'Great build quality and detail.', color: '#00ccff' },
-      { name: 'Kylo R.', crystal: 'red', stars: 5, text: 'Unstable but incredibly powerful.', color: '#ff4444' },
-      { name: 'Obi-Wan K.', crystal: 'blue', stars: 5, text: 'The negotiations were short. Great saber.', color: '#00ccff' },
-      { name: 'Yoda', crystal: 'green', stars: 5, text: 'Strong with the Force, this one is.', color: '#00ff66' },
-      { name: 'Darth Vader', crystal: 'red', stars: 5, text: 'Impressive. Most impressive.', color: '#ff4444' },
-      { name: 'Qui-Gon J.', crystal: 'green', stars: 5, text: 'At last we will have revenge... of quality.', color: '#00ff66' },
-      { name: 'Count D.', crystal: 'red', stars: 5, text: 'Magnificent, magnificent.', color: '#ff4444' },
-      { name: 'Kanan J.', crystal: 'blue', stars: 5, text: 'Fascinating weapon. Beyond stars.', color: '#00ccff' },
+      { name: 'Carlos Méndez', crystal: 'blue', stars: 5, text: 'Increíble poder, el mejor sable que he tenido.', color: '#00ccff', img: '/models/clientes/hombre1.jpg' },
+      { name: 'Sofía Rivera', crystal: 'green', stars: 5, text: 'Perfectamente equilibrado, como debería ser.', color: '#00ff66', img: '/models/clientes/mujer1.jpg' },
+      { name: 'Miguel Torres', crystal: 'purple', stars: 4.5, text: 'Arte puro, una obra maestra de la forja.', color: '#ee66ff', img: '/models/clientes/hombre2.jpg' },
+      { name: 'Javier Cruz', crystal: 'blue', stars: 5, text: 'Brilla en la noche como una estrella.', color: '#00ccff', img: '/models/clientes/hombre3.jpg' },
+      { name: 'Valentina López', crystal: 'green', stars: 5, text: 'Gran calidad de construcción y detalle.', color: '#00ff66', img: '/models/clientes/mujer2.jpg' },
+      { name: 'Roberto Díaz', crystal: 'red', stars: 5, text: 'Inestable pero increíblemente poderoso.', color: '#ff4444', img: '/models/clientes/hombre4.jpg' },
+      { name: 'Eneida Marcano', crystal: 'purple', stars: 2, text: 'No sé no vi la película, pensé que era una lámpara.', color: '#ee66ff', img: '/models/clientes/india.jpg' },
+      { name: 'Camila Jiménez', crystal: 'yellow', stars: 4.5, text: 'Fascinante arma, más allá de las estrellas.', color: '#ffcc00', img: '/models/clientes/mujer3.jpg' },
+      { name: 'Daniel Morales', crystal: 'yellow', stars: 4.5, text: 'Muy buena compra, llegó en perfecto estado.', color: '#ffcc00', img: '/models/clientes/nino.jpg' },
+      { name: 'Lucía Hernández', crystal: 'blue', stars: 4.5, text: 'Me encantó, excelente relación calidad-precio.', color: '#00ccff', img: '/models/clientes/nina.jpg' },
     ];
+
+    let REVIEWS_DB = null;
+    let activeFilter = 'all';
 
     const SUPABASE_URL = 'https://bmfmckurecmrpfaudaxa.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtZm1ja3VyZWNtcnBmYXVkYXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5NzQzNDcsImV4cCI6MjEwNDU1MDM0N30.iWLNVzHpWf38PU2hak4O6H8PkhnNnzyx5nM9y-wkb0E';
-    let supabase = null;
+    let supabaseClient = null;
     try {
-      if (window.supabase) supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      if (window.supabase) supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     } catch (e) { console.warn('Supabase init failed:', e); }
 
-    function renderStars(count) {
-      return '<span class="review-stars">' + '★'.repeat(count) + '☆'.repeat(5 - count) + '</span>';
-    }
+function renderStars(count) {
+  const full = Math.floor(count);
+  let stars = '';
+  for (let i = 0; i < full; i++) stars += '★';
+  for (let i = full; i < 5; i++) stars += '☆';
+  return '<span class="review-stars">' + stars + '</span>';
+}
 
-    function renderReviews(filter) {
-      const grid = document.getElementById('reviews-grid');
-      const filtered = filter === 'all' ? REVIEWS : REVIEWS.filter(r => r.crystal === filter);
-      grid.innerHTML = filtered.map(r => `
-        <div class="review-card" data-crystal="${r.crystal}">
-          <div class="review-img" style="background: radial-gradient(ellipse, ${r.color}22 0%, transparent 70%);">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="${r.color}" stroke-width="1.5" opacity="0.6">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-            </svg>
-          </div>
-          <div class="review-card-body">
-            ${renderStars(r.stars)}
-            <p class="review-name">${r.name}</p>
-            <p class="review-text">"${r.text}"</p>
-          </div>
+function renderReviews(filter) {
+  try {
+    const grid = document.getElementById('reviews-grid');
+    const source = REVIEWS_DB && REVIEWS_DB.length ? REVIEWS_DB : REVIEWS;
+    const filtered = filter === 'all' ? source : source.filter(r => r.crystal === filter);
+    grid.innerHTML = filtered.map(r => `
+      <div class="review-card" data-crystal="${r.crystal}">
+        <div class="w-full flex items-center justify-center overflow-hidden" style="background: radial-gradient(ellipse, ${r.color}22 0%, transparent 70%);">
+          <img class="review-img" src="${r.img}" alt="Cliente: ${r.name}" loading="lazy">
         </div>
-      `).join('');
-    }
+        <div class="review-card-body">
+          ${renderStars(r.stars)}
+          <p class="review-name">${r.name}</p>
+          <p class="review-text">"${r.text}"</p>
+        </div>
+      </div>
+    `).join('');
+    console.log('Rendered', filtered.length, 'reviews');
+  } catch(e) {
+    console.error('renderReviews error:', e);
+    document.getElementById('reviews-grid').innerHTML = '<p style="color:red;">Error cargando reseñas</p>';
+  }
+}
 
-    // Filter buttons
+    // Initial render (fallback local)
+    renderReviews('all');
+
+    // Crystal filters
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        renderReviews(btn.dataset.filter);
+        activeFilter = btn.dataset.filter;
+        renderReviews(activeFilter);
       });
     });
 
-    // Initial render
-    renderReviews('all');
+    // Reseñas desde la base de datos (solo aprobadas); fallback local si falla
+    if (supabaseClient) {
+      supabaseClient.from('reviews')
+        .select('*')
+        .eq('approved', true)
+        .order('created_at', { ascending: false })
+        .then(({ data, error }) => {
+          if (!error && data && data.length) {
+            REVIEWS_DB = data.map(r => ({
+              name: r.customer_name,
+              crystal: r.crystal || 'blue',
+              stars: Number(r.rating) || 5,
+              text: r.comment || '',
+              color: CRYSTAL_HEX[r.crystal] || '#00ccff',
+              img: r.image_url
+            }));
+            renderReviews(activeFilter);
+          }
+        })
+        .catch(e => console.warn('Reviews DB load failed:', e));
+    }
 
     // --- ORDER TRACKING ---
     const params = new URLSearchParams(window.location.search);
-    const code = params.get('code') || localStorage.getItem('kybera_last_order') || 'KYB-----';
+    let code = params.get('code') || localStorage.getItem('kybera_last_order') || 'KYB-----';
+    let trackedCode = null;
+    let trackingSuccess = false;
     document.getElementById('tracking-code').textContent = '#' + code;
+    document.getElementById('track-input').value = code !== 'KYB-----' ? code : '';
+
+    // Search button
+    document.getElementById('btn-track').addEventListener('click', () => {
+      const input = document.getElementById('track-input').value.trim().toUpperCase();
+      if (!input || input === 'KYB-----') return;
+      code = input;
+      document.getElementById('tracking-code').textContent = '#' + code;
+      document.getElementById('track-error').classList.add('hidden');
+      loadTracking();
+    });
+
+    // Enter key on search
+    document.getElementById('track-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('btn-track').click();
+      }
+    });
 
     async function loadTracking() {
       let orderData = null;
-      if (supabase && code !== 'KYB-----') {
+      const errorEl = document.getElementById('track-error');
+      errorEl.classList.add('hidden');
+
+      if (supabaseClient && code !== 'KYB-----') {
         try {
-          const { data, error } = await supabase.from('orders').select('*').eq('order_code', code).single();
-          if (!error && data) orderData = data;
-        } catch (e) { console.warn('Supabase fetch failed:', e); }
+          const { data, error } = await supabaseClient.from('orders').select('*').eq('order_code', code).single();
+          if (!error && data) {
+            orderData = data;
+          } else {
+            errorEl.classList.remove('hidden');
+          }
+        } catch (e) {
+          console.warn('Supabase fetch failed:', e);
+          errorEl.classList.remove('hidden');
+        }
+      } else if (code === 'KYB-----') {
+        errorEl.classList.remove('hidden');
       }
 
       const sleeveType = orderData ? orderData.sleeve : 'brushedSteel';
       const crystalType = orderData ? orderData.crystal : 'blue';
       const status = orderData ? orderData.status : 'forging';
 
-      document.getElementById('detail-sleeve').textContent = SLEEVE_NAMES[sleeveType] || 'Brushed Steel';
-      document.getElementById('detail-crystal').textContent = CRYSTAL_NAMES[crystalType] || 'Blue';
-      document.getElementById('detail-status').textContent = status.charAt(0).toUpperCase() + status.slice(1);
+      trackedCode = (orderData && code !== 'KYB-----') ? code : null;
+      trackingSuccess = !!orderData;
+
+      document.getElementById('detail-sleeve').textContent = SLEEVE_NAMES[sleeveType] || 'Acero Cepillado';
+      document.getElementById('detail-crystal').textContent = CRYSTAL_NAMES[crystalType] || 'Azul';
+      document.getElementById('detail-status').textContent = STATUS_NAMES[status] || 'Forja';
 
       const statusOrder = ['forging', 'tuning', 'test', 'ship', 'delivered'];
       const currentIdx = statusOrder.indexOf(status);
       const progress = Math.max(10, ((currentIdx + 1) / statusOrder.length) * 100);
       document.getElementById('progress-bar').style.width = progress + '%';
-      document.getElementById('progress-text').textContent = Math.round(progress) + '% COMPLETE';
+      document.getElementById('progress-text').textContent = Math.round(progress) + '% COMPLETADO';
 
+      const stepStatus = (i) => {
+        if (i === 0) return 'done';
+        if (i - 1 < currentIdx) return 'done';
+        if (i - 1 === currentIdx) return 'active';
+        return 'pending';
+      };
+      // Timeline real: fechas desde order_status_history
+      const historyByStatus = {};
+      if (supabaseClient && orderData && orderData.id) {
+        try {
+          const { data: hist } = await supabaseClient.from('order_status_history')
+            .select('status, changed_at')
+            .eq('order_id', orderData.id)
+            .order('changed_at', { ascending: true });
+          if (hist) hist.forEach(h => { if (!historyByStatus[h.status]) historyByStatus[h.status] = h.changed_at; });
+        } catch (e) {
+          console.warn('History load failed:', e);
+        }
+      }
       const stepData = [
-        { label: '01 Order Received', status: 'done' },
-        { label: '02 Hilt Forging', status: currentIdx >= 1 ? (status === 'forging' ? 'active' : 'done') : (currentIdx === 0 ? 'active' : 'pending') },
-        { label: '03 Kyber Core Tuning', status: currentIdx >= 2 ? (status === 'tuning' ? 'active' : 'done') : 'pending' },
-        { label: '04 Quality Test', status: currentIdx >= 3 ? (status === 'test' ? 'active' : 'done') : 'pending' },
-        { label: '05 Starport Shipping', status: currentIdx >= 4 ? (status === 'ship' || status === 'delivered' ? 'active' : 'pending') : 'pending' }
+        { label: '01 Pedido Recibido', status: stepStatus(0), historyKey: 'forging' },
+        { label: '02 Forja de la Empuñadura', status: stepStatus(1), historyKey: 'tuning' },
+        { label: '03 Sintonización del Cristal', status: stepStatus(2), historyKey: 'test' },
+        { label: '04 Prueba de Calidad', status: stepStatus(3), historyKey: 'ship' },
+        { label: '05 Envío Interestelar', status: stepStatus(4), historyKey: 'delivered' }
       ];
 
       const timelineEl = document.getElementById('timeline');
@@ -260,8 +356,12 @@
           : s.status === 'active'
           ? '<svg class="w-2.5 h-2.5 text-neon-cyan animate-spin ml-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20"/></svg>'
           : '';
-        const statusText = s.status === 'done' ? '<p class="text-[0.4rem] text-green-500/60 tracking-wider mt-0.5">[DONE]</p>'
-          : s.status === 'active' ? '<p class="text-[0.4rem] text-cyan-500/60 tracking-wider mt-0.5">[IN PROGRESS]</p>' : '';
+        const statusText = s.status === 'done' ? '<p class="text-[0.4rem] text-green-500/60 tracking-wider mt-0.5">[COMPLETADO]</p>'
+          : s.status === 'active' ? '<p class="text-[0.4rem] text-cyan-500/60 tracking-wider mt-0.5">[EN PROCESO]</p>' : '';
+        const historyDate = historyByStatus[s.historyKey];
+        const dateHTML = (historyDate && s.status !== 'pending')
+          ? '<p class="text-[0.4rem] text-gray-500 mt-0.5">' + new Date(historyDate).toLocaleDateString() + ' ' + new Date(historyDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + '</p>'
+          : '';
         return `<div class="flex items-center gap-3">
           <div class="w-3 h-3 rounded-full ${dotClass}" style="${s.status !== 'pending' ? 'box-shadow: 0 0 8px rgba(0,255,255,0.4);' : ''}"></div>
           <div class="flex-1">
@@ -270,12 +370,20 @@
               ${icon}
             </div>
             ${statusText}
+            ${dateHTML}
           </div>
         </div>`;
       }).join('');
     }
 
     loadTracking();
+
+    // Auto-refresh: refleja en vivo los cambios de status hechos por el admin
+    setInterval(() => {
+      if (trackingSuccess && trackedCode) {
+        loadTracking();
+      }
+    }, 8000);
   </script>
 </body>
 </html>
